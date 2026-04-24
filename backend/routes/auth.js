@@ -50,4 +50,17 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// TEST DATA (temporary)
+router.get('/quizzes', (req, res) => {
+  res.json([
+    {
+      _id: "123",
+      title: "DBMS Test",
+      subject: "Database",
+      timeLimit: 30,
+      questions: []
+    }
+  ]);
+});
+
 module.exports = router;

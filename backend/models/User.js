@@ -6,5 +6,4 @@ const userSchema = new mongoose.Schema({
     role: String
 });
 
-// ✅ FIX HERE
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);
