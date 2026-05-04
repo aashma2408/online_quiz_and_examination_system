@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../../../frontend/src/app/services/auth.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -21,15 +21,19 @@ import { CommonModule } from '@angular/common';
     </nav>
 
     <div class="auth-buttons">
+  
       <ng-container *ngIf="!isLoggedIn">
         <button routerLink="/login" class="login-btn">Login</button>
-        <button routerLink="/register" class="signup-btn">Sign up free</button>
+        <button routerLink="/register" class="signup-btn">Register</button>
       </ng-container>
 
       <ng-container *ngIf="isLoggedIn">
         <button *ngIf="role === 'admin'" routerLink="/admin">Admin Dashboard</button>
-        <button *ngIf="role === 'student'" routerLink="/dashboard">Dashboard</button>
-        <button routerLink="/quiz">Take Quiz</button>
+        <button *ngIf="role === 'admin'" routerLink="/quiz">Take Quiz</button>
+
+        <button *ngIf="role === 'student'" routerLink="/student">Student Dashboard</button> 
+        <button *ngIf="role === 'student'" routerLink="/startQuiz">Start Quiz</button>
+       
         <button (click)="logout()" class="logout-btn">Logout</button>
       </ng-container>
     </div>
@@ -227,18 +231,25 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeComponent implements OnInit {
 
-  isLoggedIn = false;
-  role: string | null = '';
+  isLoggedIn: boolean = false;
+  role: string = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {
+    this.auth.isLoggedIn$.subscribe(status => {
+    this.isLoggedIn = status;
+
+    this.role = this.auth.getRole() || '';
+  });
+  }
 
   ngOnInit() {
-    this.isLoggedIn = this.auth.isLoggedIn();
-    this.role = this.auth.getRole();
+     this.isLoggedIn = this.auth.isLoggedIn();
+    this.role = this.auth.getRole() || '';
   }
 
   logout() {
     this.auth.logout();
+    alert("Logged out successfully ✅");
     this.router.navigate(['/']);
   }
 }
