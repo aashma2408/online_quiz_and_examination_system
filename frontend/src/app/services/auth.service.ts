@@ -21,20 +21,8 @@ export class AuthService {
   }
 
   login(data: any): Observable<any> {
-    // simulate API call (replace with real HTTP later)
-    return new Observable(observer => {
-      const fakeToken = 'abc123';
-      const role = 'student';
-
-      localStorage.setItem('token', fakeToken);
-      localStorage.setItem('role', role);
-
-      this.isLoggedInSubject.next(true);
-
-      observer.next({ success: true });
-      observer.complete();
-    });
-  }
+  return this.http.post<any>(`${this.API}/login`, data);
+}
 
   isLoggedIn() {
   return !!localStorage.getItem('token');
@@ -61,10 +49,6 @@ export class AuthService {
   getRole() {
     return localStorage.getItem('role');
   }
-
-  // isLoggedIn(): boolean {
-  //   return !!localStorage.getItem('token');
-  // }
 
   logout() {
     localStorage.clear();

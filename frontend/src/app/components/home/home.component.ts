@@ -238,13 +238,14 @@ export class HomeComponent implements OnInit {
     this.auth.isLoggedIn$.subscribe(status => {
     this.isLoggedIn = status;
 
-    this.role = this.auth.getRole() || '';
+    // 🔥 role bhi update karo
+    this.role = (this.auth.getRole() || '').toLowerCase();
   });
   }
 
   ngOnInit() {
-     this.isLoggedIn = this.auth.isLoggedIn();
-    this.role = this.auth.getRole() || '';
+    this.isLoggedIn = this.auth.isLoggedIn();
+    this.role = (this.auth.getRole() || '').toLowerCase();
   }
 
   logout() {
