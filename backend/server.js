@@ -17,8 +17,6 @@ app.use(cors({
     credentials: true
 }));
 
-// Security Middleware
-app.use(cors());
 app.use(helmet());
 
 app.use(express.json());
@@ -35,7 +33,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/quiz_system', {
+mongoose.connect('mongodb://aashma_gaykwad:aashma24@ac-jys7sib-shard-00-00.axg99rx.mongodb.net:27017,ac-jys7sib-shard-00-01.axg99rx.mongodb.net:27017,ac-jys7sib-shard-00-02.axg99rx.mongodb.net:27017/quizDB?ssl=true&replicaSet=atlas-gx9hg9-shard-0&authSource=admin&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('MongoDB connected'))
@@ -221,63 +219,107 @@ app.get('/api/results', authenticateToken, async (req, res) => {
 
 // ========== ADMIN ROUTES ==========
 
-// Create quiz
-app.post('/api/admin/quiz', authenticateToken, isAdmin, async (req, res) => {
+// Get logged-in user profile
+app.get('/api/auth/profile', authenticateToken, async (req, res) => {
     try {
-        const { title, subject, timeLimit, questions } = req.body;
-        
+        const user = await User.findById(req.user.userId).select('-password');
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Create quiz
+app.post('/api/quiz', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const { title } = req.body;
+
         const quiz = new Quiz({
             title,
-            subject,
-            timeLimit,
-            questions,
+            subject: 'dbms', // default
+            timeLimit: 30,
+            questions: [],
             createdBy: req.user.userId
         });
-        
+
         await quiz.save();
-        res.status(201).json({ message: 'Quiz created successfully', quiz });
+        res.json(quiz);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
 // Update quiz
-app.put('/api/admin/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
+app.put('/api/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
     try {
         const quiz = await Quiz.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true }
         );
-        if (!quiz) {
-            return res.status(404).json({ message: 'Quiz not found' });
-        }
-        res.json({ message: 'Quiz updated successfully', quiz });
+        res.json(quiz);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
 // Delete quiz
-app.delete('/api/admin/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
+app.delete('/api/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
     try {
-        const quiz = await Quiz.findByIdAndDelete(req.params.id);
-        if (!quiz) {
-            return res.status(404).json({ message: 'Quiz not found' });
-        }
-        res.json({ message: 'Quiz deleted successfully' });
+        await Quiz.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Quiz deleted' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Get all users (admin)
-app.get('/api/admin/users', authenticateToken, isAdmin, async (req, res) => {
+// Get all quizzes (admin full access)
+app.get('/api/quiz', authenticateToken, isAdmin, async (req, res) => {
     try {
-        const users = await User.find().select('-password');
+        const quizzes = await Quiz.find();
+        res.json(quizzes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// GET all users (students + admin)
+app.get('/api/admin/students', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const users = await User.find({ role: 'student' }).select('-password');
         res.json(users);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// DELETE student
+app.delete('/api/admin/student/:id', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Student deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Admin reports (all students performance)
+app.get('/api/admin/reports', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const reports = await Result.find()
+            .populate('userId', 'username')
+            .populate('quizId', 'title');
+
+        const formatted = reports.map(r => ({
+            studentName: r.userId?.username,
+            quizTitle: r.quizId?.title,
+            score: r.score,
+            percentage: r.percentage
+        }));
+
+        res.json(formatted);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 
