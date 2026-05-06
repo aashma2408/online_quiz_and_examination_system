@@ -35,7 +35,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/quiz_system', {
+mongoose.connect('mongodb://aashma_gaykwad:aashma24@ac-jys7sib-shard-00-00.axg99rx.mongodb.net:27017,ac-jys7sib-shard-00-01.axg99rx.mongodb.net:27017,ac-jys7sib-shard-00-02.axg99rx.mongodb.net:27017/quizDB?ssl=true&replicaSet=atlas-gx9hg9-shard-0&authSource=admin&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('MongoDB connected'))
