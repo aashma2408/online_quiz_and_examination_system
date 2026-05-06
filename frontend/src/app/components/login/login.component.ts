@@ -141,32 +141,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onLogin() {
-    this.authService.login(this.loginForm.value).subscribe({
-      next: (res) => {
-        console.log("Login Response:", res);
-
-        // ✅ Save token & role
-        this.authService.setSession(res.token, res.role);
-
-        // ✅ Update login state
-        this.authService.isLoggedIn$.subscribe(); // optional
-        this.authService['isLoggedInSubject'].next(true);
-
-        // ✅ Redirect
-        if (res.role === 'admin') {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/student']);
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        alert("Login failed ❌");
-      }
-    });
-  }
-
   onSubmit(): void {
     if (this.loginForm.valid) {
 

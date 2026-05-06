@@ -78,13 +78,21 @@ import { CommonModule } from '@angular/common';
         <div class="error" *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.invalid">
          Name is required (min 3 characters)
         </div>
+
+        <input type="text" placeholder="Username" formControlName="username">
+        <div class="error" *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid">
+  Username required
+</div>
+
+        <input type="password" placeholder="Password" formControlName="password">
+        <div class="error" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+  Password must be at least 6 characters
+</div>
         
         <input type="text" placeholder="Email" formControlName="Email">
         <div class="error" *ngIf="registerForm.get('Email')?.touched && registerForm.get('Email')?.invalid">
         Enter valid email
          </div>
-
-        <input type="password" placeholder="Password" formControlName="password">
 
         <input type="text" placeholder="Phone Number" formControlName="phone">
         <div class="error" *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid">
@@ -95,22 +103,19 @@ import { CommonModule } from '@angular/common';
 
         <input type="text" placeholder="Branch (e.g. CSE)" formControlName="branch">
 
-        <select formControlName="year">
-          <option value="">Select Year</option>
-          <option value="1">1st Year</option>
-          <option value="2">2nd Year</option>
-           <option value="3">3rd Year</option>
-          <option value="4">4th Year</option>
-         </select>
-
         <select formControlName="role">
           <option value="">Select Role</option>
           <option value="admin">Admin</option>
           <option value="student">Student</option>
         </select>
+        <div class="error" *ngIf="registerForm.get('role')?.touched && registerForm.get('role')?.invalid">
+  Role is required
+</div>
 
-        <button type="submit" [disabled]="registerForm.invalid">Register</button>
+        <button type="submit">Register</button>
+        <p>{{ registerForm.valid }}</p>
 
+        
       </form>
 
       <p>Already have account? <a routerLink="/login">Login</a></p>
@@ -132,6 +137,8 @@ export class RegisterComponent {
 
       fullName: ['', [Validators.required, Validators.minLength(3)]],
 
+      username: ['', Validators.required],
+
       Email: ['', [
         Validators.required,
         Validators.email
@@ -145,7 +152,6 @@ export class RegisterComponent {
       ]],
       course: ['', Validators.required],
       branch: ['', Validators.required],
-      year: ['', Validators.required],
       role: ['', Validators.required]
     });
   }
