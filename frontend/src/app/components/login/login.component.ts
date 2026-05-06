@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -133,25 +134,31 @@ export class LoginComponent implements OnInit {
     });
 
     // Auto redirect if already logged in
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        const role = this.authService.getRole();
-        this.router.navigate([role === 'admin' ? '/admin' : '/quiz']);
-      }
-    });
+    // this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+    //   if (isLoggedIn) {
+    //     const role = this.authService.getRole();
+    //     this.router.navigate([role === 'admin' ? '/admin' : '/quiz']);
+    //   }
+    // });
   }
 
   onSubmit(): void {
+
+    console.log("Button clicked");
+
     if (this.loginForm.valid) {
+      console.log(this.loginForm.value);
 
       this.authService.login(this.loginForm.value).subscribe({
         next: (res: any) => {
+          console.log("Success", res);
           this.authService.saveToken(res.token);
           this.authService.saveRole(res.role);
 
           this.router.navigate(['/home']);
         },
         error: (err) => {
+          console.log("Error", err);
           this.errorMessage = err.error?.message || 'Login failed';
         }
       });
