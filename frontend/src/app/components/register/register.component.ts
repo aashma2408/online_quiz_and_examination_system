@@ -113,7 +113,6 @@ import { CommonModule } from '@angular/common';
 </div>
 
         <button type="submit">Register</button>
-        <p>{{ registerForm.valid }}</p>
 
         
       </form>

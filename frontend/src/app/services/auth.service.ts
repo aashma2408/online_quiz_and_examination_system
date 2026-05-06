@@ -28,10 +28,6 @@ export class AuthService {
   return !!localStorage.getItem('token');
 }
 
-  loginUser(data: any) {
-    return this.http.post(`${this.API}/login`, data);
-  }
-
   // Token store karne ke liye
   setSession(token: string, role: string) {
     localStorage.setItem('token', token);
