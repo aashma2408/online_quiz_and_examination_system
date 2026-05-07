@@ -66,11 +66,10 @@ import { CommonModule } from '@angular/common';
       </ng-container>
 
       <ng-container *ngIf="isLoggedIn">
+        <!-- as an admin login -->
         <button *ngIf="role === 'admin'" routerLink="/admin">Admin Dashboard</button>
-        <button *ngIf="role === 'admin'" routerLink="/quiz">Take Quiz</button>
-
+        <!-- as a student login -->
         <button *ngIf="role === 'student'" routerLink="/student">Student Dashboard</button> 
-        <button *ngIf="role === 'student'" routerLink="/startQuiz">Start Quiz</button>
        
         <button (click)="logout()" class="logout-btn">Logout</button>
       </ng-container>

@@ -1,130 +1,166 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { ProfileComponent } from './profile/profile.component';
-import { StudentComponent } from './student-management/student-management.component';
-
-
+import { CreateQuizComponent } from './quiz-management/create-quiz';
+import { QuizListComponent } from './quiz-management/quiz-list';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,  ProfileComponent, StudentComponent
-    ],
+  imports: [CommonModule, FormsModule, CreateQuizComponent, QuizListComponent],
 
   template: `
-
   <div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <h2>Admin Dashboard 👑</h2>
 
-      <button (click)="section='profile'">Profile</button>
-      <button (click)="section='students'">
-        Manage Students
-      </button> 
-      <button (click)="section='quiz'">Quiz Management</button>
-      <button (click)="loadReports()">Reports</button>
+      <button 
+  [class.active]="section==='profile'" 
+  (click)="openSection('profile')">
+  👤 Profile
+</button>
+
+<button 
+  [class.active]="section==='students'" 
+  (click)="loadStudents(); openSection('students')">
+  👨‍🎓 Manage Students
+</button>
+
+      <button (click)="toggleQuizMenu()">
+  📚 Quiz Management 
+  <span class="arrow" [class.rotate]="showQuizMenu">▼</span>
+</button>
+
+<div *ngIf="showQuizMenu" class="submenu">
+  <button 
+  [class.active]="section==='createQuiz'" 
+  (click)="openSection('createQuiz')">
+  ➕ Create Quiz
+</button>
+
+<button 
+  [class.active]="section==='quizList'" 
+  (click)="openSection('quizList')">
+  📋 List of Quizzes
+</button>
+</div>
+
+      <button 
+  [class.active]="section==='reports'" 
+  (click)="loadReports(); openSection('reports')">
+  📊 Reports
+</button>
     </aside>
 
     <!-- CONTENT -->
     <main class="content">
 
-      <app-profile *ngIf="section==='profile'"></app-profile>
+      <!-- PROFILE -->
+      <div *ngIf="section==='profile'"></div>
 
-      <app-student *ngIf="section==='students'"></app-student>
+      <!-- STUDENTS -->
+      <div *ngIf="section==='students'"></div>
 
-    <!-- QUIZ -->
-    <div *ngIf="section==='quiz'">
-      <h2>📝 Quiz Management</h2>
+      <!-- QUIZ -->
+      <app-create-quiz *ngIf="section==='createQuiz'"></app-create-quiz>
+      <app-quiz-list *ngIf="section==='quizList'"></app-quiz-list>
 
-      <input [(ngModel)]="quizTitle" placeholder="Quiz Title">
-      <button (click)="createQuiz()">Create</button>
+      <!-- REPORTS -->
+      <div *ngIf="section==='reports'"></div>
 
-      <ul>
-        <li *ngFor="let q of quizzes">
-          {{q.title}}
-
-          <button (click)="editQuiz(q)">Edit</button>
-
-          <button (click)="deleteQuiz(q._id)">
-             Delete
-          </button>
-
-        </li>
-      </ul>
-    </div>
-
-    <!-- REPORTS -->
-      <div *ngIf="section==='reports'">
-
-      <h2>📊 Reports</h2>
-
-      <table>
-
-        <tr>
-          <th>Student</th>
-           <th>Score</th>
-        </tr>
-
-        <tr *ngFor="let r of reports">
-          <td>{{r.studentName}}</td>
-          <td>{{r.score}}</td>
-        </tr>
-
-      </table>
-
-    </div>
-
-  </main>
-    
+    </main>
+  </div>
   `,
 
   styles: [`
-  .layout {
-    display: flex;
-    height: 100vh;
-  }
+  /* 🔥 MAIN LAYOUT */
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
 
-  .sidebar {
-    width: 260px;
-    background: #020617;
-    color: white;
-    padding: 20px;
-  }
+/* ✅ SIDEBAR (NO FIXED NOW) */
+.sidebar {
+  width: 250px;
+  background: #020617;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;   /* 🔥 IMPORTANT (prevent collapse) */
+}
 
-  .sidebar button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    background: #1e293b;
-    border: none;
-    color: white;
-    cursor: pointer;
-  }
+/* ✅ CONTENT */
+.content {
+  flex: 1;
+  padding: 20px;
+  background: #f8fafc;
+  overflow-y: auto;   /* 🔥 SCROLL FIX */
+}
 
-  .content {
-    flex: 1;
-    padding: 20px;
-    background: #f8fafc;
-  }
+/* 🔘 SIDEBAR BUTTONS */
+.sidebar button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  background: #1e293b;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-align: left;
+}
 
-  table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-  }
+/* ✨ Hover */
+.sidebar button:hover {
+  background: #334155;
+}
 
-  th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
+/* ✅ Active */
+.sidebar button.active {
+  background: #6366f1;
+  font-weight: bold;
+}
+
+/* 📂 Submenu */
+.submenu {
+  margin-left: 10px;
+  border-left: 2px solid #475569;
+  padding-left: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* 🔽 Arrow */
+.arrow {
+  transition: transform 0.3s;
+}
+
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+/* ✨ Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   `]
 })
-export class AdminDashboardComponent  {
+export class AdminDashboardComponent implements OnInit {
 
   section = 'profile';
 
@@ -139,15 +175,68 @@ export class AdminDashboardComponent  {
 
   constructor(private http: HttpClient) { }
 
-  
+  ngOnInit() {
+    this.loadProfile();
+    this.loadQuizzes();
+  }
 
 
+  // 🔹 PROFILE
+  loadProfile() {
+    const token = localStorage.getItem('token');
+    console.log("TOKEN:", token);
 
+    this.http.get(`${this.API}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).subscribe({
+      next: (res) => {
+        console.log("PROFILE DATA:", res);
+        this.admin = res;
+      },
+      error: (err) => {
+        console.log("ERROR:", err);
+      }
+    });
+  }
+
+  // 🔹 STUDENTS
+  loadStudents() {
+    this.section = 'students';
+    this.http.get(`${this.API}/admin/students`)
+      .subscribe((res: any) => this.students = res);
+  }
+
+  deleteStudent(id: string) {
+    this.http.delete(`${this.API}/admin/student/${id}`)
+      .subscribe(() => this.loadStudents());
+  }
 
   // 🔹 QUIZ
+  openSection(sec: string) {
+    this.section = sec;
+
+    if (sec === 'quizList') {
+      this.loadQuizzes(); // 🔥 ADD THIS
+    }
+
+    if (sec === 'createQuiz' || sec === 'quizList') {
+      this.showQuizMenu = true;
+    } else {
+      this.showQuizMenu = false;
+    }
+  }
+
   loadQuizzes() {
     this.http.get(`${this.API}/quiz`)
       .subscribe((res: any) => this.quizzes = res);
+  }
+
+  showQuizMenu = false;
+
+  toggleQuizMenu() {
+    this.showQuizMenu = !this.showQuizMenu;
   }
 
   createQuiz() {

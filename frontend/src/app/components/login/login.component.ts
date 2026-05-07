@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-
 
 @Component({
   selector: 'app-login',
@@ -115,7 +114,7 @@ import { AuthService } from '../../services/auth.service';
     }
   `]
 })
-export class LoginComponent  {
+export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
   errorMessage = '';
@@ -133,62 +132,31 @@ export class LoginComponent  {
       password: ['', Validators.required]
     });
 
+    // Auto redirect if already logged in
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        const role = this.authService.getRole();
+        this.router.navigate([role === 'admin' ? '/admin' : '/quiz']);
+      }
+    });
   }
 
   onSubmit(): void {
-
-    console.log("🔵 Login button clicked");
-
     if (this.loginForm.valid) {
 
-      console.log("📤 Sending login data:", this.loginForm.value);
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (res: any) => {
+          this.authService.saveToken(res.token);
+          this.authService.saveRole(res.role);
 
-      this.authService.login(this.loginForm.value)
-        .subscribe({
-
-          next: (res: any) => {
-
-            console.log("✅ Login success response:", res);
-
-            // ✅ Save token
-            localStorage.setItem('token', res.token);
-
-            // ✅ Save role
-            localStorage.setItem('role', res.role);
-
-            // ✅ Save complete user data
-            localStorage.setItem(
-              'user',
-              JSON.stringify(res.user)
-            );
-
-            console.log("💾 Saved User Data:", res.user);
-
-            // ✅ Redirect based on role
-            if (res.role === 'admin') {
-
-              this.router.navigate(['/admin']);
-
-            } else {
-
-              this.router.navigate(['/student-dashboard']);
-
-            }
-
-          },
-
-          error: (err) => {
-
-            console.log("❌ Login error:", err);
-
-            this.errorMessage =
-              err.error?.message || 'Login failed';
-
-          }
-
-        });
+          // redirect according to role
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Login failed';
+        }
+      });
 
     }
-
   }
 }
