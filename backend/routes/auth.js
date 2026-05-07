@@ -42,7 +42,8 @@ router.post('/login', async (req, res) => {
 
     res.json({
       token: 'dummy-token',
-      role: user.role
+      role: user.role,
+      user: user   
     });
 
   } catch (err) {
@@ -61,6 +62,26 @@ router.get('/quizzes', (req, res) => {
       questions: []
     }
   ]);
+});
+
+// PROFILE
+router.get('/profile/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      role: user.role
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

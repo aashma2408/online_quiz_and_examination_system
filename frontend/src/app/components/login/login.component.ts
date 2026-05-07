@@ -97,6 +97,8 @@ export class LoginComponent implements OnInit {
           this.authService.saveToken(res.token);
           this.authService.saveRole(res.role);
 
+          localStorage.setItem('userId', res.user._id);
+
           this.router.navigate(['/home']);
         },
         error: (err) => {
