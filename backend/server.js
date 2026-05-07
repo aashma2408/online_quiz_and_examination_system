@@ -292,6 +292,57 @@ app.get('/api/admin/students', authenticateToken, isAdmin, async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+// ADD student
+app.post('/api/admin/student', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const { name, email, class: studentClass, phone } = req.body;
+
+        const newStudent = new User({
+            username: name,
+            email,
+            class: studentClass,
+            phone,
+            role: 'student',
+            password: await bcrypt.hash('123456', 10) // default password
+        });
+
+        await newStudent.save();
+        res.json({ message: 'Student added successfully' });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// UPDATE student
+app.put('/api/admin/student/status/:id', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const { status } = req.body;
+
+        // ❗ Validation
+        if (!['Active', 'Inactive'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({
+            message: 'Status updated successfully',
+            status: user.status
+        });
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 // DELETE student
 app.delete('/api/admin/student/:id', authenticateToken, isAdmin, async (req, res) => {

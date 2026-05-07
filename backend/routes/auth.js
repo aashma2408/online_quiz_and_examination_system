@@ -6,7 +6,16 @@ const bcrypt = require('bcrypt');
 // REGISTER
 router.post('/register', async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const {
+      username,
+      password,
+      role,
+      fullName,
+      Email,
+      phone,
+      course,
+      branch
+    } = req.body;
 
     // check existing user
     const existingUser = await User.findOne({ username });
@@ -21,12 +30,17 @@ router.post('/register', async (req, res) => {
     const user = new User({
       username,
       password: hashedPassword,
-      role: role || 'student'
+      role: role || 'student',
+      fullName,
+      Email: Email,
+      phone,
+      course,
+      branch
     });
 
     await user.save();
 
-    console.log("SAVED USER:", user); 
+    console.log("SAVED USER:", user);
 
     res.status(201).json({ message: 'User registered successfully' });
 
@@ -39,7 +53,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
 
-    console.log(req.body);  
+    console.log(req.body);
 
     const { username, password } = req.body;
 
@@ -71,6 +85,31 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+   
+
+const jwt = require('jsonwebtoken');
+
+// ✅ ADD THIS ONLY
+router.get('/profile', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ message: 'No token' });
+    }
+
+    const decoded = jwt.verify(token, 'your_secret_key');
+
+    const user = await User.findById(decoded.userId).select('-password');
+
+    res.json(user);
+
+  } catch (err) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+});
+
+
 
 // TEST DATA (temporary)
 router.get('/quizzes', (req, res) => {

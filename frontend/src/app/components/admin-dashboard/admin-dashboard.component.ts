@@ -1,14 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ProfileComponent } from './profile/profile.component';
+import { StudentComponent } from './student-management/student-management.component';
+
+
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,  ProfileComponent, StudentComponent
+    ],
 
   template: `
+
   <div class="layout">
 
     <!-- SIDEBAR -->
@@ -16,7 +22,9 @@ import { FormsModule } from '@angular/forms';
       <h2>Admin Dashboard 👑</h2>
 
       <button (click)="section='profile'">Profile</button>
-      <button (click)="loadStudents()">Manage Students</button>
+      <button (click)="section='students'">
+        Manage Students
+      </button> 
       <button (click)="section='quiz'">Quiz Management</button>
       <button (click)="loadReports()">Reports</button>
     </aside>
@@ -24,69 +32,54 @@ import { FormsModule } from '@angular/forms';
     <!-- CONTENT -->
     <main class="content">
 
-      <!-- PROFILE -->
-      <div *ngIf="section==='profile'">
-        <h2>👤 Profile</h2>
-        <p><b>Username:</b> {{admin?.username}}</p>
-        <p><b>Role:</b> {{admin?.role}}</p>
-      </div>
+      <app-profile *ngIf="section==='profile'"></app-profile>
 
-      <!-- STUDENTS -->
-      <div *ngIf="section==='students'">
-        <h2>👨‍🎓 Manage Students</h2>
+      <app-student *ngIf="section==='students'"></app-student>
 
-        <table>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Action</th>
-          </tr>
+    <!-- QUIZ -->
+    <div *ngIf="section==='quiz'">
+      <h2>📝 Quiz Management</h2>
 
-          <tr *ngFor="let student of students">
-            <td>{{student.name}}</td>
-            <td>{{student.email}}</td>
-            <td>
-              <button (click)="deleteStudent(student._id)">Delete</button>
-            </td>
-          </tr>
-        </table>
-      </div>
+      <input [(ngModel)]="quizTitle" placeholder="Quiz Title">
+      <button (click)="createQuiz()">Create</button>
 
-      <!-- QUIZ -->
-      <div *ngIf="section==='quiz'">
-        <h2>📝 Quiz Management</h2>
+      <ul>
+        <li *ngFor="let q of quizzes">
+          {{q.title}}
 
-        <input [(ngModel)]="quizTitle" placeholder="Quiz Title">
-        <button (click)="createQuiz()">Create</button>
+          <button (click)="editQuiz(q)">Edit</button>
 
-        <ul>
-          <li *ngFor="let q of quizzes">
-            {{q.title}}
-            <button (click)="editQuiz(q)">Edit</button>
-            <button (click)="deleteQuiz(q._id)">Delete</button>
-          </li>
-        </ul>
-      </div>
+          <button (click)="deleteQuiz(q._id)">
+             Delete
+          </button>
 
-      <!-- REPORTS -->
+        </li>
+      </ul>
+    </div>
+
+    <!-- REPORTS -->
       <div *ngIf="section==='reports'">
-        <h2>📊 Reports</h2>
 
-        <table>
-          <tr>
-            <th>Student</th>
-            <th>Score</th>
-          </tr>
+      <h2>📊 Reports</h2>
 
-          <tr *ngFor="let r of reports">
-            <td>{{r.studentName}}</td>
-            <td>{{r.score}}</td>
-          </tr>
-        </table>
-      </div>
+      <table>
 
-    </main>
-  </div>
+        <tr>
+          <th>Student</th>
+           <th>Score</th>
+        </tr>
+
+        <tr *ngFor="let r of reports">
+          <td>{{r.studentName}}</td>
+          <td>{{r.score}}</td>
+        </tr>
+
+      </table>
+
+    </div>
+
+  </main>
+    
   `,
 
   styles: [`
@@ -131,7 +124,7 @@ import { FormsModule } from '@angular/forms';
   }
   `]
 })
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent  {
 
   section = 'profile';
 
@@ -146,42 +139,10 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
-    this.loadProfile();
-    this.loadQuizzes();
-  }
+  
 
-  // 🔹 PROFILE
-  loadProfile() {
-  const token = localStorage.getItem('token');
-  console.log("TOKEN:", token);
 
-  this.http.get(`${this.API}/auth/profile`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }).subscribe({
-    next: (res) => {
-      console.log("PROFILE DATA:", res);
-      this.admin = res;
-    },
-    error: (err) => {
-      console.log("ERROR:", err);
-    }
-  });
-}
 
-  // 🔹 STUDENTS
-  loadStudents() {
-    this.section = 'students';
-    this.http.get(`${this.API}/admin/students`)
-      .subscribe((res: any) => this.students = res);
-  }
-
-  deleteStudent(id: string) {
-    this.http.delete(`${this.API}/admin/student/${id}`)
-      .subscribe(() => this.loadStudents());
-  }
 
   // 🔹 QUIZ
   loadQuizzes() {
