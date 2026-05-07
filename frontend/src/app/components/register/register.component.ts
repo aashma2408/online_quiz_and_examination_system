@@ -89,8 +89,8 @@ import { CommonModule } from '@angular/common';
   Password must be at least 6 characters
 </div>
         
-        <input type="text" placeholder="Email" formControlName="Email">
-        <div class="error" *ngIf="registerForm.get('Email')?.touched && registerForm.get('Email')?.invalid">
+        <input type="text" placeholder="Email" formControlName="email">
+        <div class="error" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
         Enter valid email
          </div>
 
@@ -113,7 +113,6 @@ import { CommonModule } from '@angular/common';
 </div>
 
         <button type="submit">Register</button>
-        <p>{{ registerForm.valid }}</p>
 
         
       </form>
@@ -139,7 +138,7 @@ export class RegisterComponent {
 
       username: ['', Validators.required],
 
-      Email: ['', [
+      email: ['', [
         Validators.required,
         Validators.email
       ]],

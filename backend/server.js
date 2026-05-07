@@ -17,8 +17,6 @@ app.use(cors({
     credentials: true
 }));
 
-// Security Middleware
-app.use(cors());
 app.use(helmet());
 
 app.use(express.json());
@@ -221,63 +219,158 @@ app.get('/api/results', authenticateToken, async (req, res) => {
 
 // ========== ADMIN ROUTES ==========
 
-// Create quiz
-app.post('/api/admin/quiz', authenticateToken, isAdmin, async (req, res) => {
+// Get logged-in user profile
+app.get('/api/auth/profile', authenticateToken, async (req, res) => {
     try {
-        const { title, subject, timeLimit, questions } = req.body;
-        
+        const user = await User.findById(req.user.userId).select('-password');
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Create quiz
+app.post('/api/quiz', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const { title } = req.body;
+
         const quiz = new Quiz({
             title,
-            subject,
-            timeLimit,
-            questions,
+            subject: 'dbms', // default
+            timeLimit: 30,
+            questions: [],
             createdBy: req.user.userId
         });
-        
+
         await quiz.save();
-        res.status(201).json({ message: 'Quiz created successfully', quiz });
+        res.json(quiz);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
 // Update quiz
-app.put('/api/admin/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
+app.put('/api/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
     try {
         const quiz = await Quiz.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true }
         );
-        if (!quiz) {
-            return res.status(404).json({ message: 'Quiz not found' });
-        }
-        res.json({ message: 'Quiz updated successfully', quiz });
+        res.json(quiz);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
 // Delete quiz
-app.delete('/api/admin/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
+app.delete('/api/quiz/:id', authenticateToken, isAdmin, async (req, res) => {
     try {
-        const quiz = await Quiz.findByIdAndDelete(req.params.id);
-        if (!quiz) {
-            return res.status(404).json({ message: 'Quiz not found' });
-        }
-        res.json({ message: 'Quiz deleted successfully' });
+        await Quiz.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Quiz deleted' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Get all users (admin)
-app.get('/api/admin/users', authenticateToken, isAdmin, async (req, res) => {
+// Get all quizzes (admin full access)
+app.get('/api/quiz', authenticateToken, isAdmin, async (req, res) => {
     try {
-        const users = await User.find().select('-password');
+        const quizzes = await Quiz.find();
+        res.json(quizzes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// GET all users (students + admin)
+app.get('/api/admin/students', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const users = await User.find({ role: 'student' }).select('-password');
         res.json(users);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: error.message });
+    }
+});
+// ADD student
+app.post('/api/admin/student', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const { name, email, class: studentClass, phone } = req.body;
+
+        const newStudent = new User({
+            username: name,
+            email,
+            class: studentClass,
+            phone,
+            role: 'student',
+            password: await bcrypt.hash('123456', 10) // default password
+        });
+
+        await newStudent.save();
+        res.json({ message: 'Student added successfully' });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// UPDATE student
+app.put('/api/admin/student/status/:id', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const { status } = req.body;
+
+        // ❗ Validation
+        if (!['Active', 'Inactive'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({
+            message: 'Status updated successfully',
+            status: user.status
+        });
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// DELETE student
+app.delete('/api/admin/student/:id', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Student deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Admin reports (all students performance)
+app.get('/api/admin/reports', authenticateToken, isAdmin, async (req, res) => {
+    try {
+        const reports = await Result.find()
+            .populate('userId', 'username')
+            .populate('quizId', 'title');
+
+        const formatted = reports.map(r => ({
+            studentName: r.userId?.username,
+            quizTitle: r.quizId?.title,
+            score: r.score,
+            percentage: r.percentage
+        }));
+
+        res.json(formatted);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 

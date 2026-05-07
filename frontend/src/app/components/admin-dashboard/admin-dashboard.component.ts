@@ -1,51 +1,85 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { ProfileComponent } from './profile/profile.component';
+import { StudentComponent } from './student-management/student-management.component';
+
+
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule,  ProfileComponent, StudentComponent
+    ],
 
   template: `
+
   <div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <h2>Admin Panel 👑</h2>
+      <h2>Admin Dashboard 👑</h2>
 
       <button (click)="section='profile'">Profile</button>
-      <button (click)="section='students'">Manage Students</button>
+      <button (click)="section='students'">
+        Manage Students
+      </button> 
       <button (click)="section='quiz'">Quiz Management</button>
-      <button (click)="section='reports'">Reports</button>
-      <button (click)="section='notifications'">Notifications</button>
+      <button (click)="loadReports()">Reports</button>
     </aside>
 
     <!-- CONTENT -->
     <main class="content">
 
-      <div *ngIf="section==='profile'">
-        <h2>👤 Profile</h2>
-      </div>
+      <app-profile *ngIf="section==='profile'"></app-profile>
 
-      <div *ngIf="section==='students'">
-        <h2>👨‍🎓 Manage Students</h2>
-      </div>
+      <app-student *ngIf="section==='students'"></app-student>
 
-      <div *ngIf="section==='quiz'">
-        <h2>📝 Quiz Management</h2>
-        <p>Create / Edit / Delete Quiz</p>
-      </div>
+    <!-- QUIZ -->
+    <div *ngIf="section==='quiz'">
+      <h2>📝 Quiz Management</h2>
 
+      <input [(ngModel)]="quizTitle" placeholder="Quiz Title">
+      <button (click)="createQuiz()">Create</button>
+
+      <ul>
+        <li *ngFor="let q of quizzes">
+          {{q.title}}
+
+          <button (click)="editQuiz(q)">Edit</button>
+
+          <button (click)="deleteQuiz(q._id)">
+             Delete
+          </button>
+
+        </li>
+      </ul>
+    </div>
+
+    <!-- REPORTS -->
       <div *ngIf="section==='reports'">
-        <h2>📊 Reports & Analytics</h2>
-      </div>
 
-      <div *ngIf="section==='notifications'">
-        <h2>🔔 Send Notifications</h2>
-      </div>
+      <h2>📊 Reports</h2>
 
-    </main>
-  </div>
+      <table>
+
+        <tr>
+          <th>Student</th>
+           <th>Score</th>
+        </tr>
+
+        <tr *ngFor="let r of reports">
+          <td>{{r.studentName}}</td>
+          <td>{{r.score}}</td>
+        </tr>
+
+      </table>
+
+    </div>
+
+  </main>
+    
   `,
 
   styles: [`
@@ -77,8 +111,70 @@ import { CommonModule } from '@angular/common';
     padding: 20px;
     background: #f8fafc;
   }
+
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
   `]
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent  {
+
   section = 'profile';
+
+  admin: any = {};
+  students: any[] = [];
+  quizzes: any[] = [];
+  reports: any[] = [];
+
+  quizTitle = '';
+
+  API = 'http://localhost:5000/api';
+
+  constructor(private http: HttpClient) { }
+
+  
+
+
+
+
+  // 🔹 QUIZ
+  loadQuizzes() {
+    this.http.get(`${this.API}/quiz`)
+      .subscribe((res: any) => this.quizzes = res);
+  }
+
+  createQuiz() {
+    this.http.post(`${this.API}/quiz`, { title: this.quizTitle })
+      .subscribe(() => {
+        this.quizTitle = '';
+        this.loadQuizzes();
+      });
+  }
+
+  editQuiz(q: any) {
+    const newTitle = prompt('Edit quiz title', q.title);
+    if (!newTitle) return;
+
+    this.http.put(`${this.API}/quiz/${q._id}`, { title: newTitle })
+      .subscribe(() => this.loadQuizzes());
+  }
+
+  deleteQuiz(id: string) {
+    this.http.delete(`${this.API}/quiz/${id}`)
+      .subscribe(() => this.loadQuizzes());
+  }
+
+  // 🔹 REPORTS
+  loadReports() {
+    this.section = 'reports';
+    this.http.get(`${this.API}/admin/reports`)
+      .subscribe((res: any) => this.reports = res);
+  }
 }
