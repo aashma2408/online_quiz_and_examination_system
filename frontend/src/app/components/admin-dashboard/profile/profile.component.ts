@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 
 @Component({
-    selector: 'app-profile',
+  selector: 'app-profile',
 
-    standalone: true,
-    imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule],
 
-    template: `
+  template: `
 
 <!-- CONTENT -->
 <main class="content">
@@ -25,8 +25,8 @@ import { HttpClient } from '@angular/common/http';
 
         
         <img
-            [src]="admin.profileImage || 'https://i.pravatar.cc/300'"
-            class="profile-img"
+          [src]="profileImage || 'https://i.pravatar.cc/300'"
+          class="profile-img"
         />
         
 
@@ -98,7 +98,7 @@ import { HttpClient } from '@angular/common/http';
 </div>
   `,
 
-    styles: [`
+  styles: [`
     *{
   font-family: Arial, sans-serif;
 }
@@ -221,66 +221,99 @@ import { HttpClient } from '@angular/common/http';
 }
   `]
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
 
-    section: string = 'profile';
+  section: string = 'profile';
 
-    profileImage: string =
-        'https://i.pravatar.cc/300';
-
-    admin = {
-     username: 'admin123',
-     fullName: 'Deepa Admin',
-     email: 'admin@gmail.com',
-     role: 'Administrator',
-     phone: '9876543210',
-     course: 'B.tech',
-     branch: 'Computer Science',
-     profileImage: 'https://i.pravatar.cc/300'
-};
+  profileImage: string =
+    'https://i.pravatar.cc/300';
 
 
-    API = 'http://localhost:5000/api';
+  admin: any = {};
 
-    constructor(private http: HttpClient) { }
+  API = 'http://localhost:5000/api';
 
-    ngOnInit(): void {
-        this.loadProfile();
-    }
+  constructor(private http: HttpClient) { }
+
+  ngOnInit(): void {
+    this.loadProfile();
+  }
 
 
-    onImageChange(event: any) {
+  onImageChange(event: any) {
 
-        const file = event.target.files[0];
+    const file = event.target.files[0];
 
-        if (file) {
+    if (!file) return;
 
-            const reader = new FileReader();
+    const reader = new FileReader();
 
-            reader.onload = () => {
-                this.profileImage = reader.result as string;
-            };
+    reader.onload = () => {
 
-            reader.readAsDataURL(file);
+      this.admin.photo = reader.result as string;
 
+      const token = localStorage.getItem('token');
+
+      this.http.put(
+        `${this.API}/auth/upload-photo/${this.admin._id}`,
+        {
+          photo: this.admin.photo
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      ).subscribe({
+
+        next: (res) => {
+
+          console.log("✅ Photo Uploaded");
+
+        },
+
+        error: (err) => {
+          console.log(err);
         }
 
-    }
-    loadProfile() {
+      });
 
-        const token = localStorage.getItem('token');
+    };
 
-        this.http.get(`${this.API}/auth/profile`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }).subscribe({
-            next: (res: any) => {
-                this.admin = res;
-            },
-            error: (err) => {
-                console.log(err);
-            }
-        });
-    }
+    reader.readAsDataURL(file);
+  }
+
+
+  loadProfile() {
+
+    const token = localStorage.getItem('token');
+
+    this.http.get<any>(`${this.API}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).subscribe({
+
+      next: (res) => {
+
+        console.log("✅ Profile Data:", res);
+
+        this.admin = res;
+
+        this.admin = res;
+
+        console.log("ADMIN DATA =", this.admin);
+
+        if (this.admin.photo) {
+          this.profileImage = this.admin.photo;
+        }
+
+      },
+
+      error: (err) => {
+        console.log("❌ Profile Error", err);
+      }
+
+    });
+  }
 }

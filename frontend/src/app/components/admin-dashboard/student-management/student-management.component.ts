@@ -4,12 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-student',
-    standalone: true,
-    imports: [CommonModule, FormsModule],
+  selector: 'app-student',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
 
 
-    template: `
+  template: `
 
 <div class="container">
 
@@ -78,10 +78,11 @@ import { FormsModule } from '@angular/forms';
     <thead>
 
       <tr>
-        <th>ID</th>
+        <th>Enrollment No.</th>
         <th>Name</th>
         <th>Email</th>
         <th>Subject</th>
+        <th>Phone</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
@@ -92,13 +93,15 @@ import { FormsModule } from '@angular/forms';
 
       <tr *ngFor="let student of paginatedStudents()">
 
-        <td>{{student._id}}</td>
+        <td><b>{{student.enrollment}}</b></td>
 
         <td>{{student.username}}</td>
 
         <td>{{student.email}}</td>
 
         <td>{{student.subject}}</td>
+
+        <td><b>{{student.enrollment}}</b></td>
 
         <td>
 
@@ -125,13 +128,6 @@ import { FormsModule } from '@angular/forms';
             (click)="deleteStudent(student._id)"
           >
             Delete
-          </button>
-
-          <button
-            class="toggle-btn"
-            (click)="toggleStatus(student)"
-          >
-            Toggle
           </button>
 
         </td>
@@ -167,7 +163,7 @@ import { FormsModule } from '@angular/forms';
 
 `,
 
-    styles: [`
+  styles: [`
   
   *{
   font-family: Arial, sans-serif;
@@ -227,6 +223,7 @@ th{
 td{
   padding:14px;
   border-bottom:1px solid #eee;
+  vertical-align: middle;
 }
 
 tr:hover{
@@ -260,10 +257,7 @@ button:hover{
   color:white;
 }
 
-.toggle-btn{
-  background:#10b981;
-  color:white;
-}
+
 
 .pagination{
   margin-top:25px;
@@ -314,184 +308,179 @@ button:hover{
 })
 export class StudentComponent implements OnInit {
 
-    students: any[] = [];
+  students: any[] = [];
 
-    searchText = '';
+  searchText = '';
 
-    selectedClass = '';
+  selectedClass = '';
 
-    subjects = ['DS', 'OS', 'OOPS'];
+  subjects = ['DS', 'OS', 'OOPS'];
 
-    editingStudent: any = null;
+  editingStudent: any = null;
 
-    currentPage = 1;
+  currentPage = 1;
 
-    pageSize = 5;
+  pageSize = 5;
 
-    API = 'http://localhost:5000/api';
+  API = 'http://localhost:5000/api';
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
+    this.loadStudents();
+  }
+
+  loadStudents() {
+    // this.http.get(`${this.API}/admin/students`)
+    //     .subscribe((res: any) => {
+    //         this.students = res;
+    //     });
+
+
+    this.students = [
+
+      {
+        enrollment: 'EN2025001',
+        username: 'Rahul',
+        email: 'rahul@gmail.com',
+        subject: 'DS',
+        phone: '9876543210',
+        status: 'active'
+      },
+
+      {
+        enrollment: 'EN2025002',
+        username: 'Priya',
+        email: 'priya@gmail.com',
+        subject: 'DS',
+        phone: '9123456780',
+        status: 'inactive'
+      },
+
+      {
+        enrollment: 'EN2025003',
+        username: 'Aman',
+        email: 'aman@gmail.com',
+        subject: 'DS',
+        phone: '9988776655',
+        status: 'active'
+      }
+
+    ];
+  }
+
+
+  deleteStudent(id: string) {
+    this.http.delete(`${this.API}/admin/student/${id}`)
+      .subscribe(() => {
         this.loadStudents();
+      });
+  }
+
+  editStudent(student: any) {
+    this.editingStudent = { ...student };
+  }
+
+  updateStudent() {
+
+    this.http.put(
+      `${this.API}/admin/student/${this.editingStudent._id}`,
+      {
+        username: this.editingStudent.username,
+        email: this.editingStudent.email,
+        subject: this.editingStudent.subject,
+        phone: this.editingStudent.phone
+      }
+    ).subscribe(() => {
+      this.editingStudent = null;
+      this.loadStudents();
+    });
+
+  }
+
+
+
+  filteredStudents() {
+
+    return this.students.filter(s =>
+
+      (
+        s.username?.toLowerCase()
+          .includes(this.searchText.toLowerCase())
+
+        ||
+
+        s.email?.toLowerCase()
+          .includes(this.searchText.toLowerCase())
+      )
+
+      &&
+
+      (
+        this.selectedClass
+          ? s.subject === this.selectedClass
+          : true
+      )
+
+    );
+
+  }
+
+  paginatedStudents() {
+
+    const filtered = this.filteredStudents();
+
+    const start =
+      (this.currentPage - 1) * this.pageSize;
+
+    return filtered.slice(
+      start,
+      start + this.pageSize
+    );
+
+  }
+
+  nextPage() {
+
+    if (
+      this.currentPage * this.pageSize
+      <
+      this.filteredStudents().length
+    ) {
+      this.currentPage++;
     }
 
-    loadStudents() {
-        // this.http.get(`${this.API}/admin/students`)
-        //     .subscribe((res: any) => {
-        //         this.students = res;
-        //     });
+  }
 
-        this.students = [
+  prevPage() {
 
-            {
-                _id: '101',
-                username: 'Rahul',
-                email: 'rahul@gmail.com',
-                subject: 'DS',
-                status: 'active'
-            },
-
-            {
-                _id: '102',
-                username: 'Priya',
-                email: 'priya@gmail.com',
-                subject: 'DS',
-                status: 'inactive'
-            },
-
-            {
-                _id: '103',
-                username: 'Aman',
-                email: 'aman@gmail.com',
-                subject: 'DS',
-                status: 'active'
-            }
-
-        ];
+    if (this.currentPage > 1) {
+      this.currentPage--;
     }
 
+  }
 
-    deleteStudent(id: string) {
-        this.http.delete(`${this.API}/admin/student/${id}`)
-            .subscribe(() => {
-                this.loadStudents();
-            });
-    }
+  get totalPages() {
 
-    editStudent(student: any) {
-        this.editingStudent = { ...student };
-    }
+    return Math.ceil(
+      this.filteredStudents().length
+      /
+      this.pageSize
+    );
 
-    updateStudent() {
+  }
 
-        this.http.put(
-            `${this.API}/admin/student/${this.editingStudent._id}`,
-            {
-                username: this.editingStudent.username,
-                email: this.editingStudent.email,
-                subject: this.editingStudent.subject,
-                phone: this.editingStudent.phone
-            }
-        ).subscribe(() => {
-            this.editingStudent = null;
-            this.loadStudents();
-        });
+  get pages() {
 
-    }
+    return Array.from(
+      { length: this.totalPages },
+      (_, i) => i + 1
+    );
 
-    toggleStatus(student: any) {
+  }
 
-        this.http.put(
-            `${this.API}/admin/student/status/${student._id}`,
-            {}
-        ).subscribe(() => {
-            this.loadStudents();
-        });
-
-    }
-
-    filteredStudents() {
-
-        return this.students.filter(s =>
-
-            (
-                s.username?.toLowerCase()
-                    .includes(this.searchText.toLowerCase())
-
-                ||
-
-                s.email?.toLowerCase()
-                    .includes(this.searchText.toLowerCase())
-            )
-
-            &&
-
-            (
-                this.selectedClass
-                  ? s.subject === this.selectedClass
-                    : true
-            )
-
-        );
-
-    }
-
-    paginatedStudents() {
-
-        const filtered = this.filteredStudents();
-
-        const start =
-            (this.currentPage - 1) * this.pageSize;
-
-        return filtered.slice(
-            start,
-            start + this.pageSize
-        );
-
-    }
-
-    nextPage() {
-
-        if (
-            this.currentPage * this.pageSize
-            <
-            this.filteredStudents().length
-        ) {
-            this.currentPage++;
-        }
-
-    }
-
-    prevPage() {
-
-        if (this.currentPage > 1) {
-            this.currentPage--;
-        }
-
-    }
-
-    get totalPages() {
-
-        return Math.ceil(
-            this.filteredStudents().length
-            /
-            this.pageSize
-        );
-
-    }
-
-    get pages() {
-
-        return Array.from(
-            { length: this.totalPages },
-            (_, i) => i + 1
-        );
-
-    }
-
-    goToPage(page: number) {
-        this.currentPage = page;
-    }
+  goToPage(page: number) {
+    this.currentPage = page;
+  }
 
 }

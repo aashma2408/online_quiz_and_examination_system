@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 require('dotenv').config();
+
 const User = require('./models/User'); 
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(cors({
 app.use(helmet());
 
 app.use(express.json());
+
 
 
 app.options('*', cors());
@@ -303,7 +305,7 @@ app.post('/api/admin/student', authenticateToken, isAdmin, async (req, res) => {
             class: studentClass,
             phone,
             role: 'student',
-            password: await bcrypt.hash('123456', 10) // default password
+            password: await bcryptjs.hash('123456', 10) // default password
         });
 
         await newStudent.save();

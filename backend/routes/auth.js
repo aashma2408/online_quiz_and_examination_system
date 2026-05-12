@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-// REGISTER
+// REGISTER - FIXED
 router.post('/register', async (req, res) => {
   try {
     const {
@@ -11,28 +12,30 @@ router.post('/register', async (req, res) => {
       password,
       role,
       fullName,
-      Email,
+      email,
       phone,
       course,
       branch
     } = req.body;
 
-    // check existing user
+    console.log("📝 Registration data:", req.body);
+
+    // Check existing user
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // hash password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ ADD YOUR LINE HERE
+    // ✅ Create user with correct field names
     const user = new User({
       username,
       password: hashedPassword,
       role: role || 'student',
       fullName,
-      Email: Email,
+      email,        // ✅ Use email (not Email)
       phone,
       course,
       branch
@@ -40,20 +43,35 @@ router.post('/register', async (req, res) => {
 
     await user.save();
 
-    console.log("SAVED USER:", user);
+    console.log("✅ Saved user:", user);
 
-    res.status(201).json({ message: 'User registered successfully' });
+    // ✅ Send complete user data back
+    res.status(201).json({
+      message: 'User registered successfully',
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        course: user.course,
+        branch: user.branch,
+        role: user.role,
+        username: user.username
+      }
+    });
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error("❌ Registration error:", error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
   }
 });
 
-// LOGIN
+
+
+
+// LOGIN - FIXED
 router.post('/login', async (req, res) => {
   try {
-
-    console.log(req.body);
+    console.log("🔐 Login request:", req.body);
 
     const { username, password } = req.body;
 
@@ -67,29 +85,34 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const jwt = require('jsonwebtoken');
-
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       process.env.JWT_SECRET || 'your_secret_key',
-      { expiresIn: '1h' }
+      { expiresIn: '7d' }
     );
 
+    // ✅ Send complete user data (matching your component expectations)
     res.json({
       token,
       role: user.role,
-      username: user.username
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        course: user.course,
+        branch: user.branch,
+        role: user.role,
+        username: user.username
+      }
     });
 
   } catch (err) {
+    console.error("❌ Login error:", err);
     res.status(500).json({ message: err.message });
   }
 });
-   
 
-const jwt = require('jsonwebtoken');
-
-// ✅ ADD THIS ONLY
+// GET PROFILE
 router.get('/profile', async (req, res) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
@@ -98,20 +121,65 @@ router.get('/profile', async (req, res) => {
       return res.status(401).json({ message: 'No token' });
     }
 
-    const decoded = jwt.verify(token, 'your_secret_key');
-
+    const decoded = jwt.verify(
+     token,
+     process.env.JWT_SECRET || 'your_secret_key'
+    );
+    
     const user = await User.findById(decoded.userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
     res.json(user);
 
   } catch (err) {
-    res.status(401).json({ message: 'Invalid token' });
+
+    console.error("❌ Profile error:", err);
+
+    if (err.name === 'TokenExpiredError') {
+
+      return res.status(401).json({
+        message: 'Token expired. Please login again.'
+      });
+
+    }
+
+    res.status(401).json({
+      message: 'Invalid token'
+    });
   }
 });
 
 
+// UPLOAD PHOTO
+router.put('/upload-photo/:id', async (req, res) => {
 
-// TEST DATA (temporary)
+  try {
+
+    const { photo } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { photo },
+      { new: true }
+    );
+
+    res.json(updatedUser);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: 'Error uploading photo'
+    });
+  }
+
+});
+
+// TEST DATA
 router.get('/quizzes', (req, res) => {
   res.json([
     {
