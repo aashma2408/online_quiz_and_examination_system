@@ -1,17 +1,24 @@
-import { Component } from '@angular/core';
+import { Component , OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { ProfileComponent } from './profile/profile.component';
+import { PreviousAttemptsComponent } from './previous-attempts/previous-attempts.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { StartQuizComponent } from './start-quiz/start-quiz.component';
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProfileComponent,
+    PreviousAttemptsComponent,
+    NotificationsComponent,
+    StartQuizComponent],
 
   template: `
   <div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <h2>Student Panel</h2>
+      <h2>Student Panel 🎓</h2>
 
       <button (click)="section='profile'">Profile</button>
       <button (click)="section='results'">Previous Attempts</button>
@@ -22,64 +29,180 @@ import { CommonModule } from '@angular/common';
     <!-- CONTENT -->
     <main class="content">
 
-      <div *ngIf="section==='profile'">
-        <h2>👤 Profile</h2>
-        <p>Name: Student</p>
-        <p>Email: student@email.com</p>
-      </div>
+      <app-profile *ngIf="section==='profile'"></app-profile>
 
-      <div *ngIf="section==='results'">
-        <h2>📊 Previous Results</h2>
-        <p>DBMS - 80%</p>
-        <p>OS - 70%</p>
-      </div>
+      <app-previous-attempts
+      *ngIf="section==='results'">
+      </app-previous-attempts>
 
-      <div *ngIf="section==='notifications'">
-        <h2>🔔 Notifications</h2>
-        <p>New Quiz Available</p>
-        <p>Result Published</p>
-      </div>
+      <app-notifications
+      *ngIf="section==='notifications'">
+      </app-notifications>
 
-      <div *ngIf="section==='quiz'">
-        <h2>🚀 Start Quiz</h2>
-        <p>Select subject and start</p>
-      </div>
-
+      <app-start-quiz
+      *ngIf="section==='quiz'">
+      </app-start-quiz>
     </main>
   </div>
   `,
 
   styles: [`
-  .layout {
-    display: flex;
-    height: 100vh;
+
+  *{
+    font-family: Arial;
   }
 
-  .sidebar {
-    width: 250px;
-    background: #1e293b;
-    color: white;
-    padding: 20px;
+  .layout{
+    display:flex;
+    height:100vh;
+    background:#f1f5f9;
   }
 
-  .sidebar button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    background: #334155;
-    border: none;
-    color: white;
-    cursor: pointer;
+  /* SIDEBAR */
+  .sidebar{
+    width:250px;
+    background:#0f172a;
+    padding:20px;
+    color:white;
   }
 
-  .content {
-    flex: 1;
-    padding: 20px;
-    background: #f1f5f9;
+  .sidebar h2{
+    margin-bottom:30px;
   }
+
+  .sidebar button{
+    width:100%;
+    padding:12px;
+    margin-bottom:12px;
+    border:none;
+    background:#1e293b;
+    color:white;
+    cursor:pointer;
+    border-radius:6px;
+    font-size:15px;
+  }
+
+  .sidebar button:hover{
+    background:#334155;
+  }
+
+  /* CONTENT */
+  .content{
+    flex:1;
+    padding:40px;
+  }
+
+  /* PROFILE CARD */
+  .profile-card{
+    background:white;
+    border-radius:20px;
+    padding:35px;
+    display:flex;
+    gap:40px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+  }
+
+  .left{
+    width:280px;
+    text-align:center;
+    border-right:1px solid #ddd;
+    padding-right:30px;
+  }
+
+  .profile-img{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #6366f1;
+  }
+
+  .left h2{
+    margin-top:20px;
+    font-size:32px;
+  }
+
+  .role-badge{
+    margin-top:20px;
+    display:inline-block;
+    padding:10px 25px;
+    background:#e0e7ff;
+    color:#4338ca;
+    border-radius:30px;
+    font-weight:bold;
+  }
+
+  .right{
+    flex:1;
+  }
+
+  .title{
+    margin-bottom:30px;
+    color:#1e293b;
+  }
+
+  .info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+  }
+
+  .info-box{
+    background:#f3f4f6;
+    padding:25px;
+    border-radius:15px;
+  }
+
+  .info-box span{
+    color:#6b7280;
+    font-size:14px;
+  }
+
+  .info-box h3{
+    margin-top:10px;
+    font-size:28px;
+    color:#111827;
+  }
+
+  /* RESULTS */
+  .result-box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-top:15px;
+    display:flex;
+    justify-content:space-between;
+  }
+
+  /* NOTIFICATIONS */
+  .notify{
+    background:white;
+    padding:15px;
+    margin-top:15px;
+    border-left:5px solid #6366f1;
+    border-radius:5px;
+  }
+
+  /* QUIZ */
+  .quiz-btn{
+    margin-top:20px;
+    padding:14px 30px;
+    border:none;
+    background:#6366f1;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+  }
+
   `]
 })
-export class StudentDashboardComponent {
+export class StudentDashboardComponent  {
+
   section = 'profile';
+
+  ngOnInit() {
+    const studentData = localStorage.getItem('student');
+    console.log("🎯 Dashboard - Student data:", studentData);
+  }
 }

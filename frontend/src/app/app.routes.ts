@@ -17,5 +17,6 @@ export const routes: Routes = [
 
   // { path: 'quiz', component: TakeQuizComponent, canActivate: [authGuard] },
 
+  
   { path: '**', redirectTo: '' }
 ];
