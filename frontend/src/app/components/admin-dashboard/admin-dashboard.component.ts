@@ -4,13 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ProfileComponent } from './profile/profile.component';
 import { StudentComponent } from './student-management/student-management.component';
-
+import { ReportsComponent } from './report/report.component';
 
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,  ProfileComponent, StudentComponent
+  imports: [CommonModule, FormsModule,  ProfileComponent, StudentComponent, ReportsComponent
     ],
 
   template: `
@@ -57,26 +57,7 @@ import { StudentComponent } from './student-management/student-management.compon
       </ul>
     </div>
 
-    <!-- REPORTS -->
-      <div *ngIf="section==='reports'">
-
-      <h2>📊 Reports</h2>
-
-      <table>
-
-        <tr>
-          <th>Student</th>
-           <th>Score</th>
-        </tr>
-
-        <tr *ngFor="let r of reports">
-          <td>{{r.studentName}}</td>
-          <td>{{r.score}}</td>
-        </tr>
-
-      </table>
-
-    </div>
+    <app-reports *ngIf="section==='reports'"></app-reports>
 
   </main>
     
@@ -131,7 +112,6 @@ export class AdminDashboardComponent  {
   admin: any = {};
   students: any[] = [];
   quizzes: any[] = [];
-  reports: any[] = [];
 
   quizTitle = '';
 
@@ -140,10 +120,6 @@ export class AdminDashboardComponent  {
   constructor(private http: HttpClient) { }
 
   
-
-
-
-
   // 🔹 QUIZ
   loadQuizzes() {
     this.http.get(`${this.API}/quiz`)
@@ -171,10 +147,5 @@ export class AdminDashboardComponent  {
       .subscribe(() => this.loadQuizzes());
   }
 
-  // 🔹 REPORTS
-  loadReports() {
-    this.section = 'reports';
-    this.http.get(`${this.API}/admin/reports`)
-      .subscribe((res: any) => this.reports = res);
-  }
+  
 }
