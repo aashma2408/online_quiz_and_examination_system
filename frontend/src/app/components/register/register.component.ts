@@ -40,6 +40,22 @@ import { AuthService } from '../../services/auth.service';
             </div>
           </div>
 
+          <!-- Enrollment Number -->
+          <div class="form-group">
+            <input 
+             type="text" 
+              placeholder="Enrollment Number" 
+              formControlName="enrollmentNumber"
+             [class.error-input]="registerForm.get('enrollmentNumber')?.invalid && registerForm.get('enrollmentNumber')?.touched">
+
+            <div class="error"
+             *ngIf="registerForm.get('enrollmentNumber')?.touched && registerForm.get('enrollmentNumber')?.invalid">
+
+             Enrollment Number is required
+
+            </div>
+          </div>
+
           <!-- Email -->
           <div class="form-group">
             <input 
@@ -235,6 +251,7 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       username: ['', Validators.required],
+      enrollmentNumber: ['', Validators.required], 
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
@@ -261,14 +278,14 @@ export class RegisterComponent {
     this.authService.register(this.registerForm.value).subscribe({
       next: (response: any) => {
         console.log('Registration successful:', response);
-        
+
         // Store user data in localStorage
         if (response.user) {
           localStorage.setItem('student', JSON.stringify(response.user));
         } else {
           localStorage.setItem('student', JSON.stringify(this.registerForm.value));
         }
-        
+
         alert('✅ Registration successful! Please login.');
         this.router.navigate(['/login']);
       },

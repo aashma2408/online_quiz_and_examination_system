@@ -61,6 +61,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
         </div>
 
         <div class="info-card">
+          <label>Enrollment Number</label>
+          <p>{{ student.enrollmentNumber }}</p>
+        </div>
+
+        <div class="info-card">
           <label>Email</label>
           <p>{{ student.email }}</p>
         </div>

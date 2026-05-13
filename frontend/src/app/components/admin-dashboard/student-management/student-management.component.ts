@@ -23,53 +23,6 @@ import { FormsModule } from '@angular/forms';
       placeholder="Search student..."
     >
 
-    <select [(ngModel)]="selectedClass">
-
-      <option value="">All Classes</option>
-
-      <option *ngFor="let s of subjects" [value]="s">
-       {{s}}
-      </option>
-
-    </select>
-
-  </div>
-
-  <!-- EDIT FORM -->
-  <div
-    *ngIf="editingStudent"
-    class="edit-box"
-  >
-
-    <h3>Edit Student</h3>
-
-    <input
-      [(ngModel)]="editingStudent.username"
-      placeholder="Username"
-    >
-
-    <input
-      [(ngModel)]="editingStudent.email"
-      placeholder="Email"
-    >
-
-    <input
-      [(ngModel)]="editingStudent.subject"
-    >
-
-    <input
-      [(ngModel)]="editingStudent.phone"
-      placeholder="Phone"
-    >
-
-    <button (click)="updateStudent()">
-      Update
-    </button>
-
-    <button (click)="editingStudent=null">
-      Cancel
-    </button>
-
   </div>
 
   <!-- TABLE -->
@@ -81,9 +34,7 @@ import { FormsModule } from '@angular/forms';
         <th>Enrollment No.</th>
         <th>Name</th>
         <th>Email</th>
-        <th>Subject</th>
         <th>Phone</th>
-        <th>Status</th>
         <th>Actions</th>
       </tr>
 
@@ -93,36 +44,15 @@ import { FormsModule } from '@angular/forms';
 
       <tr *ngFor="let student of paginatedStudents()">
 
-        <td><b>{{student.enrollment}}</b></td>
+        <td><b>{{student.enrollmentNumber}}</b></td>
 
-        <td>{{student.username}}</td>
+        <td>{{student.fullName}}</td>
 
         <td>{{student.email}}</td>
 
-        <td>{{student.subject}}</td>
-
-        <td><b>{{student.enrollment}}</b></td>
+        <td><b>{{student.phone}}</b></td>
 
         <td>
-
-          <span
-            [class.status-active]="student.status === 'active'"
-            [class.status-inactive]="student.status !== 'active'"
-          >
-            {{student.status}}
-          </span>
-
-        </td>
-
-        <td>
-
-          <button
-            class="edit-btn action-btn"
-            (click)="editStudent(student)"
-          >
-            Edit
-          </button>
-
           <button
             class="delete-btn action-btn"
             (click)="deleteStudent(student._id)"
@@ -312,12 +242,6 @@ export class StudentComponent implements OnInit {
 
   searchText = '';
 
-  selectedClass = '';
-
-  subjects = ['DS', 'OS', 'OOPS'];
-
-  editingStudent: any = null;
-
   currentPage = 1;
 
   pageSize = 5;
@@ -331,42 +255,14 @@ export class StudentComponent implements OnInit {
   }
 
   loadStudents() {
-    // this.http.get(`${this.API}/admin/students`)
-    //     .subscribe((res: any) => {
-    //         this.students = res;
-    //     });
+    this.http.get(`${this.API}/auth/students`)
+      .subscribe((res: any) => {
 
+        console.log(res);
 
-    this.students = [
+        this.students = res;
 
-      {
-        enrollment: 'EN2025001',
-        username: 'Rahul',
-        email: 'rahul@gmail.com',
-        subject: 'DS',
-        phone: '9876543210',
-        status: 'active'
-      },
-
-      {
-        enrollment: 'EN2025002',
-        username: 'Priya',
-        email: 'priya@gmail.com',
-        subject: 'DS',
-        phone: '9123456780',
-        status: 'inactive'
-      },
-
-      {
-        enrollment: 'EN2025003',
-        username: 'Aman',
-        email: 'aman@gmail.com',
-        subject: 'DS',
-        phone: '9988776655',
-        status: 'active'
-      }
-
-    ];
+      });
   }
 
 
@@ -377,50 +273,21 @@ export class StudentComponent implements OnInit {
       });
   }
 
-  editStudent(student: any) {
-    this.editingStudent = { ...student };
-  }
-
-  updateStudent() {
-
-    this.http.put(
-      `${this.API}/admin/student/${this.editingStudent._id}`,
-      {
-        username: this.editingStudent.username,
-        email: this.editingStudent.email,
-        subject: this.editingStudent.subject,
-        phone: this.editingStudent.phone
-      }
-    ).subscribe(() => {
-      this.editingStudent = null;
-      this.loadStudents();
-    });
-
-  }
-
 
 
   filteredStudents() {
 
     return this.students.filter(s =>
 
-      (
-        s.username?.toLowerCase()
-          .includes(this.searchText.toLowerCase())
 
-        ||
+      s.fullName?.toLowerCase()
+        .includes(this.searchText.toLowerCase())
 
-        s.email?.toLowerCase()
-          .includes(this.searchText.toLowerCase())
-      )
+      ||
 
-      &&
+      s.email?.toLowerCase()
+        .includes(this.searchText.toLowerCase())
 
-      (
-        this.selectedClass
-          ? s.subject === this.selectedClass
-          : true
-      )
 
     );
 

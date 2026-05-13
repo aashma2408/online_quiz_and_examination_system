@@ -9,6 +9,7 @@ router.post('/register', async (req, res) => {
   try {
     const {
       username,
+      enrollmentNumber,
       password,
       role,
       fullName,
@@ -32,10 +33,11 @@ router.post('/register', async (req, res) => {
     // ✅ Create user with correct field names
     const user = new User({
       username,
+      enrollmentNumber,
       password: hashedPassword,
       role: role || 'student',
       fullName,
-      email,        // ✅ Use email (not Email)
+      email,      
       phone,
       course,
       branch
@@ -50,6 +52,7 @@ router.post('/register', async (req, res) => {
       message: 'User registered successfully',
       user: {
         fullName: user.fullName,
+        enrollmentNumber: user.enrollmentNumber,
         email: user.email,
         phone: user.phone,
         course: user.course,
@@ -102,7 +105,7 @@ router.post('/login', async (req, res) => {
         course: user.course,
         branch: user.branch,
         role: user.role,
-        username: user.username
+        username: user.username,
       }
     });
 
@@ -190,6 +193,32 @@ router.get('/quizzes', (req, res) => {
       questions: []
     }
   ]);
+});
+
+// GET ALL REGISTERED STUDENTS
+router.get('/students', async (req, res) => {
+
+  try {
+
+    const students = await User.find(
+      { role: 'student' },
+      {
+        password: 0
+      }
+    );
+
+    res.json(students);
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: 'Server Error'
+    });
+
+  }
+
 });
 
 module.exports = router;
