@@ -79,78 +79,160 @@ import { CommonModule } from '@angular/common';
 
   <!-- HERO SECTION -->
   <section class="hero">
-    <div class="hero-text">
-      <h1>A completely free quiz platform</h1>
-      <p>Create, share and analyze quizzes in minutes 🚀</p>
 
-      <div class="cta">
-        <input placeholder="Enter your email" />
-        <button class="cta-btn" routerLink="/register">Get Started</button>
+    <!-- LEFT -->
+    <div class="hero-text">
+
+       <div class="badge">
+        ✨ 100% Free Forever
       </div>
 
-      
+      <h1>
+        A completely free <br>
+        <span>quiz platform</span>
+      </h1>
+
+      <p>
+        Create interactive quizzes, conduct online exams,
+        manage students, track performance and analyze
+        reports with ease.
+      </p>
+
+      <!-- FEATURES -->
+      <div class="hero-features">
+
+        <div class="hero-feature">
+          ✅ Live Results
+        </div>
+
+        <div class="hero-feature">
+          🔒 Secure Exams
+        </div>
+
+        <div class="hero-feature">
+          📊 Instant Analytics
+        </div>
+
+        <div class="hero-feature">
+          👨‍🎓 Student Dashboard
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta">
+
+        <input
+          type="email"
+          placeholder="Enter your email address"
+        >
+
+        <button
+          class="cta-btn"
+          routerLink="/register"
+        >
+          Get Started Free
+        </button>
+      </div>
+
+      <div class="small-text">
+        ✔ No credit card required • Free forever
+      </div>
     </div>
 
+     <!-- MAIN IMAGE -->
     <div class="hero-img">
       <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" />
     </div>
   </section>
 
-  <section class="features">
-  <h2 class="section-title">Explore how QuizMaster works</h2>
+  <!-- FEATURES SECTION -->
+<section class="features-section">
 
-  <div class="template-grid">
+  <h2 class="section-heading">
+    Powerful features for <span>everyone</span>
+  </h2>
 
-  <!-- DATA SCIENCE -->
-  <div class="template-card">
-    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71">
-    <h3>Data Science Quiz</h3>
-    <p>Test your knowledge of data analysis, ML & statistics.</p>
-    <a href="#">Use template</a>
-  </div>
+  <div class="features-grid">
 
-  <!-- C++ -->
-  <div class="template-card">
-    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
-    <h3>C++ Programming</h3>
-    <p>Practice coding concepts, OOPs & problem solving.</p>
-    <a href="#">Use template</a>
-  </div>
+    <!-- FEATURE 1 -->
+    <div class="feature-box">
+      <div class="feature-icon green">
+        <i class="fas fa-pen"></i>
+      </div>
 
-  <!-- PLACEMENT -->
-  <div class="template-card">
-    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978">
-    <h3>Placement Quiz</h3>
-    <p>Prepare for aptitude, reasoning & interview questions.</p>
-    <a href="#">Use template</a>
-  </div>
+      <h3>Easy Quiz Creation</h3>
 
-</div>
-
-  <div class="feature-grid">
-
-    <!-- CARD 1 -->
-    <div class="feature-card green">
-      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png" />
-      <h3>📝 Create quizzes</h3>
-      <p>Create quizzes in minutes with multiple question types and smart tools.</p>
+      <p>
+        Create quizzes in minutes with various question
+        types and smart tools.
+      </p>
     </div>
 
-    <!-- CARD 2 -->
-    <div class="feature-card orange">
-      <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" />
-      <h3>🚀 Share easily</h3>
-      <p>Send quizzes via links, email or social media easily.</p>
+    <!-- FEATURE 2 -->
+    <div class="feature-box">
+      <div class="feature-icon purple">
+        <i class="fas fa-link"></i>
+      </div>
+
+      <h3>Share Anywhere</h3>
+
+      <p>
+        Share quizzes via link,
+        email or social media
+        in just one click.
+      </p>
     </div>
 
-    <!-- CARD 3 -->
-    <div class="feature-card blue">
-      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" />
-      <h3>📊 Analyze results</h3>
-      <p>Track results with real-time reports and analytics dashboard.</p>
+    <!-- FEATURE 3 -->
+    <div class="feature-box">
+      <div class="feature-icon orange">
+        <i class="fas fa-chart-column"></i>
+      </div>
+
+      <h3>Real-time Analytics</h3>
+
+      <p>
+        Get instant results and
+        detailed performance
+        reports.
+      </p>
     </div>
+
+    <!-- FEATURE 4 -->
+    <div class="feature-box">
+      <div class="feature-icon blue">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+
+      <h3>Secure & Reliable</h3>
+
+      <p>
+        Industry-standard
+        security to ensure fair
+        and safe exams.
+      </p>
+    </div>
+
+    <!-- FEATURE 5 -->
+    <div class="feature-box">
+      <div class="feature-icon pink">
+        <i class="fas fa-user-group"></i>
+      </div>
+
+      <h3>Student Management</h3>
+
+      <p>
+        Manage students, track
+        progress and monitor
+        performance.
+      </p>
+    </div>
+
+    
+    
 
   </div>
+
 </section>
 
 <section class="integrations">
@@ -191,6 +273,39 @@ import { CommonModule } from '@angular/common';
   </div>
 </section>
 
+<!-- FAQ SECTION -->
+<section class="faq-section">
+
+  <h2 class="section-heading">
+    Frequently asked <span>questions</span>
+  </h2>
+
+  <div class="faq-grid">
+
+    <div class="faq-card">
+      <h3>Is QuizMaster really free?</h3>
+      <p>Yes! QuizMaster is completely free to use.</p>
+    </div>
+
+    <div class="faq-card">
+      <h3>Can I conduct live quizzes?</h3>
+      <p>Absolutely! You can track results live.</p>
+    </div>
+
+    <div class="faq-card">
+      <h3>Can I import questions?</h3>
+      <p>Yes, from Excel and Google Sheets.</p>
+    </div>
+
+    <div class="faq-card">
+      <h3>Is my data secure?</h3>
+      <p>We use industry-level security protection.</p>
+    </div>
+
+  </div>
+
+</section>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-grid">
@@ -207,6 +322,8 @@ import { CommonModule } from '@angular/common';
         <p>Blog</p>
         <p>Help Center</p>
         <p>API Docs</p>
+
+        
       </div>
 
       <div>
@@ -214,6 +331,7 @@ import { CommonModule } from '@angular/common';
         <p>About Us</p>
         <p>Contact</p>
         <p>Privacy Policy</p>
+        <p>Terms & Conditions</p>
       </div>
 
     </div>
@@ -233,6 +351,22 @@ import { CommonModule } from '@angular/common';
 
 
   styles: [`
+
+  /* MAIN THEME COLORS */
+:root{
+  --primary:#2563eb;
+  --secondary:#7c3aed;
+  --dark:#0f172a;
+
+  --section-bg:
+    linear-gradient(to bottom,#f8fbff,#eef4ff);
+
+  --card-bg:#ffffff;
+
+  --text:#475569;
+}
+
+
 * {
   box-sizing: border-box;
   font-family: 'Segoe UI', sans-serif;
@@ -336,154 +470,146 @@ nav a:hover {
   color: white;
 }
 
-/* HERO */
-.hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 80px 60px;
-  background: linear-gradient(to right, #a2cdf8, #cde7f8);
+/* HERO SECTION */
+.hero{
+  min-height: 88vh;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:60px 70px 120px;
+  background:
+    radial-gradient(circle at top left,
+    rgba(255,255,255,0.10), transparent 25%),
+
+    radial-gradient(circle at bottom right,
+    rgba(255,255,255,0.08), transparent 25%),
+
+     linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
+  position:relative;
+  overflow:hidden;
+  color:white;
+  gap:50px;
 }
 
-.hero-text h1 {
-  font-size: 48px;
+/* LEFT SIDE */
+.hero-text{
+  flex:1;
+  z-index:2;
 }
 
-.cta {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
+.badge{
+  display:inline-block;
+  padding:12px 22px;
+  border-radius:30px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:30px;
 }
 
-.cta input {
-  padding: 10px;
-  flex: 1;
+.hero-text h1{
+  font-size:76px;
+  line-height:1.05;
+  font-weight:800;
+  margin-bottom:25px;
 }
 
-.cta-btn {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
+.hero-text h1 span{
+  color:#ffd84d;
 }
 
-.hero-img img {
-  width: 400px;
+.hero-text p{
+  font-size:24px;
+  line-height:1.7;
+  color:#e2e8f0;
+  max-width:700px;
+  margin-bottom:35px;
 }
 
-/* TEMPLATES */
-.templates {
-  padding: 80px 40px;
-  text-align: center;
-  background: linear-gradient(to right, #a2cdf8, #cde7f8);
+/* FEATURE BOXES */
+.hero-features{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:35px;
 }
 
-.template-grid {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  margin-top: 40px;
-  flex-wrap: wrap;
+.hero-feature{
+  background:rgba(255,255,255,0.12);
+  padding:16px 22px;
+  border-radius:16px;
+  backdrop-filter:blur(10px);
+  font-weight:600;
+  transition:0.3s;
 }
 
-.template-card {
-  width: 300px;
-  background: white;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  transition: 0.3s;
+.hero-feature:hover{
+  transform:translateY(-4px);
+  background:rgba(255,255,255,0.18);
 }
 
-.template-card:hover {
-  transform: translateY(-8px);
+/* CTA */
+.cta{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px;
 }
 
-.template-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+.cta input{
+  width:420px;
+  padding:18px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  outline:none;
 }
 
-.template-card h3 {
-  margin: 10px;
+.cta-btn{
+  border:none;
+  padding:18px 35px;
+  border-radius:14px;
+  background:linear-gradient(90deg,#4f8cff,#b14dff);
+  color:white;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s;
 }
 
-.template-card a {
-  color: #22c55e;
-  text-decoration: none;
-  font-weight: bold;
+.cta-btn:hover{
+  transform:translateY(-2px) scale(1.02);
 }
 
-/* FEATURES MODERN */
-.features {
-  text-align: center;
-  padding: 80px 40px;
-   background: linear-gradient(to right, #a2cdf8, #cde7f8);
+.small-text{
+  color:#dbeafe;
+  font-size:18px;
 }
 
-.section-title {
-  font-size: 32px;
-  font-weight: bold;
+/* RIGHT IMAGE */
+.hero-img{
+  flex:1;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.feature-grid {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 50px;
-  flex-wrap: wrap;
+.hero-img img{
+  width:550px;
+  max-width:100%;
+  z-index:2;
+  animation:float 4s ease-in-out infinite;
 }
 
-.feature-card {
-  width: 300px;
-  padding: 30px 20px;
-  border-radius: 20px;
-  color: white;
-  text-align: center;
-  transition: 0.4s;
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
 
-.feature-card img {
-  width: 60px;
-  margin-bottom: 15px;
-}
-
-.feature-card h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.feature-card p {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-/* HOVER EFFECT 🔥 */
-.feature-card:hover {
-  transform: translateY(-10px) scale(1.03);
-}
-
-/* COLORS */
-.green {
-  background: linear-gradient(135deg, #10b981, #34d399);
-}
-
-.orange {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
-}
-
-.blue {
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
-}
 
 /* INTEGRATIONS */
-.integrations {
-  padding: 80px 20px;
-  text-align: center;
-  background: linear-gradient(to right, #a2cdf8, #cde7f8);
+.integrations{
+  padding:90px 20px;
+  text-align:center;
+  background:var(--section-bg);
 }
 
 /* tools container */
@@ -558,6 +684,187 @@ nav a:hover {
 .copyright {
   text-align: center;
 }
+
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+
+  .hero{
+    flex-direction:column;
+    text-align:center;
+    padding:50px 25px 120px;
+  }
+
+  .hero-text h1{
+    font-size:56px;
+  }
+
+  .hero-text p{
+    font-size:20px;
+    margin:auto auto 30px;
+  }
+
+  .hero-features{
+    justify-content:center;
+  }
+
+  .cta{
+    flex-direction:column;
+  }
+
+  .cta input{
+    width:100%;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .score-card,
+  .mcq-card{
+    display:none;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .hero-text h1{
+    font-size:42px;
+  }
+
+  .hero-img img{
+    width:320px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+}
+
+/* FEATURES */
+.features-section {
+  padding: 80px 50px;
+  background:var(--section-bg);
+  text-align: center;
+}
+
+.section-heading {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 50px;
+}
+
+.section-heading span{
+  background:linear-gradient(90deg,#2563eb,#7c3aed);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+}
+
+.feature-box {
+  background:var(--card-bg);
+  padding: 40px 25px;
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition: 0.35s;
+  border:1px solid #e2e8f0;
+}
+
+.feature-box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(37,99,235,0.15);
+}
+
+.feature-box h3{
+  font-size:22px;
+  margin-bottom:15px;
+  color:#0f172a;
+}
+
+.feature-box p{
+  color:#64748b;
+  line-height:1.7;
+  font-size:15px;
+}
+
+/* FEATURE ICONS */
+.feature-icon{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  margin:auto auto 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  color:white;
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* COLORS */
+.green{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+
+.purple{
+  background:linear-gradient(135deg,#8b5cf6,#7c3aed);
+}
+
+.orange{
+  background:linear-gradient(135deg,#f59e0b,#ea580c);
+}
+
+.blue{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+}
+
+.pink{
+  background:linear-gradient(135deg,#ec4899,#db2777);
+}
+
+/* FAQ */
+.faq-section {
+  padding:90px 50px;
+  background:var(--section-bg);
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.faq-card{
+  background:var(--card-bg);
+  padding:30px;
+  border-radius:20px;
+  border:1px solid #dbeafe;
+  box-shadow:0 10px 25px rgba(0,0,0,0.06);
+  transition:0.3s;
+}
+
+.faq-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 15px 30px rgba(37,99,235,0.12);
+}
+
+.faq-card h3 {
+  margin-bottom: 15px;
+  color: #0f172a;
+}
+
+.faq-card p {
+  color: #475569;
+}
+
+
 `]
 
 })
@@ -586,3 +893,9 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
+
+
+
+
+
+

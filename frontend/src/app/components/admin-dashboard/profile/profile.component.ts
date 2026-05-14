@@ -23,12 +23,21 @@ import { HttpClient } from '@angular/common/http';
 
       <div class="image-box">
 
-        
-        <img
-          [src]="profileImage || 'https://i.pravatar.cc/300'"
-          class="profile-img"
-        />
-        
+        <div class="image-preview" *ngIf="profileImage">
+
+          <img
+           [src]="profileImage"
+           class="profile-img"
+          />
+
+        </div>
+
+        <div
+          class="empty-image"
+          *ngIf="!profileImage"
+        >
+           No Photo
+        </div>
 
         <input
           type="file"
@@ -137,6 +146,30 @@ import { HttpClient } from '@angular/common/http';
   border:5px solid #6366f1;
 }
 
+.empty-image{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  border:4px dashed #cbd5e1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:auto;
+  color:#64748b;
+  font-weight:bold;
+  background:#f8fafc;
+}
+
+.image-preview{
+  display:flex;
+  justify-content:center;
+}
+
+.upload-btn{
+  margin-top:15px;
+  background:#6366f1;
+}
+
 .upload-btn{
   margin-top:15px;
   background:#6366f1;
@@ -201,33 +234,64 @@ import { HttpClient } from '@angular/common/http';
   color:#0f172a;
 }
 
+
 @media(max-width:768px){
+
+  .profile-container{
+    padding:15px;
+  }
 
   .profile-card{
     flex-direction:column;
+    padding:20px;
+    gap:20px;
   }
 
   .left-section{
     width:100%;
     border-right:none;
     border-bottom:1px solid #ddd;
+    padding-right:0;
     padding-bottom:20px;
+  }
+
+  .profile-img{
+    width:120px;
+    height:120px;
+  }
+
+  .upload-btn{
+    width:100%;
+    font-size:14px;
+  }
+
+  .right-section h2{
+    text-align:center;
+    font-size:20px;
   }
 
   .info-grid{
     grid-template-columns:1fr;
+    gap:15px;
+  }
+
+  .info-box{
+    padding:15px;
+  }
+
+  .info-box p{
+    font-size:16px;
   }
 
 }
+
   `]
 })
 export class ProfileComponent implements OnInit {
 
   section: string = 'profile';
 
-  profileImage: string =
-    'https://i.pravatar.cc/300';
-
+  profileImage: string = '';
 
   admin: any = {};
 
@@ -251,6 +315,8 @@ export class ProfileComponent implements OnInit {
     reader.onload = () => {
 
       this.admin.photo = reader.result as string;
+
+      this.profileImage = this.admin.photo;
 
       const token = localStorage.getItem('token');
 

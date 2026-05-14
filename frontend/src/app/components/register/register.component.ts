@@ -11,7 +11,9 @@ import { AuthService } from '../../services/auth.service';
   template: `
     <div class="auth-container">
       <div class="auth-card">
+
         <h2>Create Account</h2>
+
         <p style="margin-bottom: 20px; color: #666;">Register to start your quiz journey</p>
 
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
@@ -143,100 +145,210 @@ import { AuthService } from '../../services/auth.service';
     </div>
   `,
   styles: [`
-    .auth-container {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 20px;
-    }
+   
+    /* =========================
+   RESPONSIVE MODERN UI CSS
+========================= */
 
-    .auth-card {
-      background: white;
-      padding: 40px;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 450px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    }
+*{
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: #333;
-      font-size: 28px;
-    }
+.auth-container{
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background:
+  linear-gradient(135deg,#667eea,#764ba2);
+}
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+.auth-card{
+  width: 100%;
+  max-width: 480px;
+  background: white;
+  padding: 35px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+  animation: fadeIn 0.5s ease;
+}
 
-    input, select {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e1e5e9;
-      border-radius: 10px;
-      font-size: 14px;
-      transition: all 0.3s;
-      box-sizing: border-box;
-    }
+h2{
+  text-align: center;
+  margin-bottom: 10px;
+  color: #222;
+  font-size: 32px;
+  font-weight: bold;
+}
 
-    input:focus, select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-    }
+.subtitle{
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
 
-    .error-input {
-      border-color: #e53e3e !important;
-    }
+.form-group{
+  margin-bottom: 18px;
+}
 
-    .error {
-      color: #e53e3e;
-      font-size: 12px;
-      margin-top: 5px;
-      margin-left: 5px;
-    }
+input,
+select{
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+  background: white;
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+input:focus,
+select:focus{
+  border-color: #667eea;
+  box-shadow: 0 0 8px rgba(102,126,234,0.3);
+}
 
-    button:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
+.error-input{
+  border-color: red !important;
+}
 
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+.error{
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  padding-left: 4px;
+}
 
-    .login-link {
-      text-align: center;
-      margin-top: 25px;
-      color: #666;
-    }
+button{
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #667eea;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-    .login-link a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-    }
+button:hover:not(:disabled){
+  background: #5a67d8;
+  transform: translateY(-2px);
+}
 
-    .login-link a:hover {
-      text-decoration: underline;
-    }
+button:disabled{
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.login-link{
+  text-align: center;
+  margin-top: 20px;
+  color: #555;
+  font-size: 14px;
+}
+
+.login-link a{
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover{
+  text-decoration: underline;
+}
+
+/* =========================
+   TABLET RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+  .auth-card{
+    max-width: 100%;
+    padding: 30px 22px;
+  }
+
+  h2{
+    font-size: 28px;
+  }
+
+  .subtitle{
+    font-size: 13px;
+  }
+
+  input,
+  select{
+    padding: 13px;
+    font-size: 14px;
+  }
+
+  button{
+    padding: 13px;
+    font-size: 15px;
+  }
+
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media(max-width:480px){
+
+  .auth-container{
+    padding: 15px;
+  }
+
+  .auth-card{
+    padding: 25px 18px;
+    border-radius: 16px;
+  }
+
+  h2{
+    font-size: 24px;
+  }
+
+  .subtitle{
+    font-size: 12px;
+  }
+
+  input,
+  select{
+    font-size: 13px;
+  }
+
+  button{
+    font-size: 14px;
+  }
+
+  .login-link{
+    font-size: 13px;
+  }
+
+}
+
+@keyframes fadeIn{
+
+  from{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
   `]
 })
 export class RegisterComponent {
@@ -251,7 +363,7 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       username: ['', Validators.required],
-      enrollmentNumber: ['', Validators.required], 
+      enrollmentNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],

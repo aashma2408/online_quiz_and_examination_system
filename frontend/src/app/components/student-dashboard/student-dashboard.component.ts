@@ -1,4 +1,4 @@
-import { Component , OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ProfileComponent } from './profile/profile.component';
@@ -54,7 +54,7 @@ import { StartQuizComponent } from './start-quiz/start-quiz.component';
 
   .layout{
     display:flex;
-    height:100vh;
+    min-height:100vh;
     background:#f1f5f9;
   }
 
@@ -195,9 +195,51 @@ import { StartQuizComponent } from './start-quiz/start-quiz.component';
     font-size:16px;
   }
 
+
+ /* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media(max-width:768px){
+
+  .layout{
+    flex-direction:column;
+    min-height:auto;
+  }
+
+  .sidebar{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    padding:15px;
+  }
+
+  .sidebar h2{
+    width:100%;
+    text-align:center;
+    margin-bottom:15px;
+    font-size:22px;
+  }
+
+  .sidebar button{
+    width:auto;
+    min-width:140px;
+    margin-bottom:0;
+    padding:10px;
+    font-size:14px;
+  }
+
+  .content{
+    padding:15px;
+  }
+
+}
+
   `]
 })
-export class StudentDashboardComponent  {
+export class StudentDashboardComponent {
 
   section = 'profile';
 

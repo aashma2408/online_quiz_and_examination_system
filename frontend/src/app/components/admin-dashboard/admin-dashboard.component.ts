@@ -22,11 +22,15 @@ import { ReportsComponent } from './report/report.component';
       <h2>Admin Dashboard 👑</h2>
 
       <button (click)="section='profile'">Profile</button>
+
       <button (click)="section='students'">
         Manage Students
       </button> 
+
       <button (click)="section='quiz'">Quiz Management</button>
-      <button (click)="loadReports()">Reports</button>
+
+      <button (click)="section='reports'">Reports</button>
+      
     </aside>
 
     <!-- CONTENT -->
@@ -103,6 +107,52 @@ import { ReportsComponent } from './report/report.component';
     border: 1px solid #ccc;
     padding: 10px;
   }
+
+
+  /* =========================
+   RESPONSIVE SIDEBAR
+========================= */
+
+@media(max-width:768px){
+
+  .layout{
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 15px;
+    white-space: nowrap;
+  }
+
+  .sidebar h2{
+    font-size: 18px;
+    margin-right: 15px;
+  }
+
+  .sidebar button{
+    min-width: 160px;
+    margin: 0;
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .content{
+    padding: 15px;
+  }
+
+  table{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+}
   `]
 })
 export class AdminDashboardComponent  {
@@ -117,7 +167,8 @@ export class AdminDashboardComponent  {
 
   API = 'http://localhost:5000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+  private http: HttpClient) { }
 
   
   // 🔹 QUIZ
@@ -147,5 +198,6 @@ export class AdminDashboardComponent  {
       .subscribe(() => this.loadQuizzes());
   }
 
-  
+
+
 }

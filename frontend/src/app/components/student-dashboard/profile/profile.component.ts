@@ -18,9 +18,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     <!-- LEFT -->
     <div class="left-section">
 
-      <img
-      [src]="selectedPhoto || student.photo || 'https://i.pravatar.cc/200'"
-      class="profile-img"
+    <div
+      class="empty-image"
+      *ngIf="!selectedPhoto && !student.photo"
+    >
+      No Photo
+    </div>
+
+    <img
+     *ngIf="selectedPhoto || student.photo"
+     [src]="selectedPhoto || student.photo"
+     class="profile-img"
     />
 
     <input
@@ -136,6 +144,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     border:5px solid #6366f1;
   }
 
+  .empty-image{
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  border:4px dashed #cbd5e1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:auto;
+  background:#f8fafc;
+  color:#64748b;
+  font-size:18px;
+  font-weight:600;
+}
+
   .photo-btn{
     margin-top: 18px;
     padding: 12px 24px;
@@ -216,29 +239,81 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
   /* MOBILE */
 
-  @media(max-width:900px){
+  /* MOBILE RESPONSIVE */
 
-    .profile-container{
-      flex-direction:column;
-      padding:25px;
-    }
+@media(max-width:768px){
 
-    .left-section{
-      width:100%;
-      border-right:none;
-      border-bottom:2px solid #ececec;
-      padding-right:0;
-      padding-bottom:25px;
-    }
-
-    .info-grid{
-      grid-template-columns:1fr;
-    }
-
-    .title{
-      text-align:center;
-    }
+  .profile-container{
+    width:95%;
+    margin:15px auto;
+    padding:20px;
+    flex-direction:column;
+    gap:25px;
   }
+
+  /* LEFT SECTION */
+  .left-section{
+    width:100%;
+    border-right:none;
+    border-bottom:2px solid #ececec;
+    padding-right:0;
+    padding-bottom:20px;
+    text-align:center;
+  }
+
+  .profile-img{
+    width:120px;
+    height:120px;
+  }
+
+  .left-section h1{
+    font-size:24px;
+  }
+
+  .role-badge{
+    font-size:14px;
+    padding:8px 18px;
+  }
+
+  .photo-btn{
+    width:100%;
+    max-width:250px;
+    font-size:14px;
+    padding:10px;
+  }
+
+  /* RIGHT SECTION */
+  .right-section{
+    width:100%;
+  }
+
+  .title{
+    text-align:center;
+    font-size:24px;
+    margin-bottom:20px;
+  }
+
+  /* INFO GRID */
+  .info-grid{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+
+  .info-card{
+    padding:18px;
+  }
+
+  .info-card label{
+    font-size:14px;
+  }
+
+  .info-card p{
+    font-size:18px;
+  }
+
+}
+
+
 
   `]
 })
