@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StudentQuizList],
 
   template: `
   <div class="layout">
@@ -34,7 +34,7 @@ import { CommonModule } from '@angular/common';
       <button
         [class.active]="section==='quiz'"
         (click)="section='quiz'">
-        🚀 List of Quizzes
+        📋 List of Quizzes
       </button>
     </aside>
 
@@ -85,12 +85,7 @@ import { CommonModule } from '@angular/common';
 
       <!-- QUIZ -->
       <div *ngIf="section==='quiz'">
-        <h2>📋 List of Quizzes</h2>
-
-        <div class="card">
-          <p>Select a quiz to view details and attempt.</p>
-        </div>
-        
+        <app-student-quiz-list></app-student-quiz-list>
       </div>
 
     </main>

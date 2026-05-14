@@ -4,7 +4,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { StudentDashboardComponent } from './components/student-dashboard/student-dashboard.component';
-
+import { AttemptQuiz } from './components/student-dashboard/List of Quizzes/attemptQuiz';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
 
@@ -13,6 +13,8 @@ export const routes: Routes = [
 
   { path: 'student', component: StudentDashboardComponent },
   { path: 'admin', component: AdminDashboardComponent },
+
+  { path: 'attempt-quiz/:id', component: AttemptQuiz },
 
   {
     path: 'quiz/:id',

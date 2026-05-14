@@ -20,7 +20,7 @@ export class AuthService {
     return this.http.post(`${this.API}/register`, data);
   }
 
-  login(data: any): Observable<any> {
+  login(data: any){
   return this.http.post<any>(`${this.API}/login`, data);
 }
 
