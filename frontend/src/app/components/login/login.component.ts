@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -7,6 +8,10 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
+=======
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+>>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -304,8 +309,12 @@ import { AuthService } from '../../services/auth.service';
 
   `]
 })
+<<<<<<< HEAD
 
 export class LoginComponent {
+=======
+export class LoginComponent implements OnInit {
+>>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
 
   loginForm!: FormGroup;
   errorMessage = '';
@@ -326,14 +335,19 @@ export class LoginComponent {
 
     });
 
+    // Auto redirect if already logged in
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        const role = this.authService.getRole();
+        this.router.navigate([role === 'admin' ? '/admin' : '/quiz']);
+      }
+    });
   }
 
   onSubmit(): void {
-
-    console.log("🔵 Login button clicked");
-
     if (this.loginForm.valid) {
 
+<<<<<<< HEAD
       console.log(
         "📤 Sending login data:",
         this.loginForm.value
@@ -399,9 +413,22 @@ export class LoginComponent {
           }
 
         });
+=======
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (res: any) => {
+          this.authService.saveToken(res.token);
+          this.authService.saveRole(res.role);
+
+          // redirect according to role
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Login failed';
+        }
+      });
+>>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
 
     }
-
   }
 
 }

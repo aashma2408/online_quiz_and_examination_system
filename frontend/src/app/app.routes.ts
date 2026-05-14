@@ -4,8 +4,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { StudentDashboardComponent } from './components/student-dashboard/student-dashboard.component';
-import { authGuard } from './guards/auth.guard';
-
+import { AttemptQuiz } from './components/student-dashboard/List of Quizzes/attemptQuiz';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
 
@@ -15,8 +14,11 @@ export const routes: Routes = [
   { path: 'student', component: StudentDashboardComponent },
   { path: 'admin', component: AdminDashboardComponent },
 
-  // { path: 'quiz', component: TakeQuizComponent, canActivate: [authGuard] },
+  { path: 'attempt-quiz/:id', component: AttemptQuiz },
 
-  
-  { path: '**', redirectTo: '' }
+  {
+    path: 'quiz/:id',
+    loadComponent: () => import('./components/admin-dashboard/quiz-management/view-quiz')
+      .then(m => m.QuizViewComponent)
+  }
 ];

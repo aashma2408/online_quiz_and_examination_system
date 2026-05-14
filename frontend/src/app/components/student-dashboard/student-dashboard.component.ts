@@ -1,136 +1,211 @@
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
+=======
+import { Component } from '@angular/core';
+>>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
 import { CommonModule } from '@angular/common';
-
-import { ProfileComponent } from './profile/profile.component';
-import { PreviousAttemptsComponent } from './previous-attempts/previous-attempts.component';
-import { NotificationsComponent } from './notifications/notifications.component';
-import { StartQuizComponent } from './start-quiz/start-quiz.component';
+import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule, ProfileComponent,
-    PreviousAttemptsComponent,
-    NotificationsComponent,
-    StartQuizComponent],
+  imports: [CommonModule, StudentQuizList],
 
   template: `
   <div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <h2>Student Panel 🎓</h2>
+      <h2>Student Dashboard 🎓</h2>
 
-      <button (click)="section='profile'">Profile</button>
-      <button (click)="section='results'">Previous Attempts</button>
-      <button (click)="section='notifications'">Notifications</button>
-      <button (click)="section='quiz'">Start Quiz</button>
+      <button
+        [class.active]="section==='profile'"
+        (click)="section='profile'">
+        👤 Profile
+      </button>
+
+      <button
+        [class.active]="section==='results'"
+        (click)="section='results'">
+        📊 Previous Attempts
+      </button>
+
+      <button
+        [class.active]="section==='notifications'"
+        (click)="section='notifications'">
+        🔔 Notifications
+      </button>
+
+      <button
+        [class.active]="section==='quiz'"
+        (click)="section='quiz'">
+        📋 List of Quizzes
+      </button>
     </aside>
 
     <!-- CONTENT -->
     <main class="content">
 
-      <app-profile *ngIf="section==='profile'"></app-profile>
+      <!-- PROFILE -->
+      <div *ngIf="section==='profile'">
+        <h2>👤 Profile</h2>
+        <p><b>Name:</b> Student</p>
+        <p><b>Email:</b> student@email.com</p>
+      </div>
 
-      <app-previous-attempts
-      *ngIf="section==='results'">
-      </app-previous-attempts>
+      <!-- RESULTS -->
+      <div *ngIf="section==='results'">
+        <h2>📊 Previous Results</h2>
 
-      <app-notifications
-      *ngIf="section==='notifications'">
-      </app-notifications>
+        <table>
+          <tr>
+            <th>Subject</th>
+            <th>Score</th>
+          </tr>
 
-      <app-start-quiz
-      *ngIf="section==='quiz'">
-      </app-start-quiz>
+          <tr>
+            <td>DBMS</td>
+            <td>80%</td>
+          </tr>
+
+          <tr>
+            <td>OS</td>
+            <td>70%</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div *ngIf="section==='notifications'">
+        <h2>🔔 Notifications</h2>
+
+        <div class="card">
+          <p>✅ New Quiz Available</p>
+        </div>
+
+        <div class="card">
+          <p>📢 Result Published</p>
+        </div>
+      </div>
+
+      <!-- QUIZ -->
+      <div *ngIf="section==='quiz'">
+        <app-student-quiz-list></app-student-quiz-list>
+      </div>
+
     </main>
   </div>
   `,
 
   styles: [`
-
-  *{
-    font-family: Arial;
+  /* 🔥 MAIN LAYOUT */
+  .layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
   }
 
+<<<<<<< HEAD
   .layout{
     display:flex;
     min-height:100vh;
     background:#f1f5f9;
+=======
+  /* ✅ SIDEBAR */
+  .sidebar {
+    width: 250px;
+    background: #020617;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+>>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
   }
 
-  /* SIDEBAR */
-  .sidebar{
-    width:250px;
-    background:#0f172a;
-    padding:20px;
-    color:white;
+  /* ✅ CONTENT */
+  .content {
+    flex: 1;
+    padding: 20px;
+    background: #f8fafc;
+    overflow-y: auto;
   }
 
-  .sidebar h2{
-    margin-bottom:30px;
+  /* 🔘 SIDEBAR BUTTONS */
+  .sidebar button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    background: #1e293b;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-size: 15px;
   }
 
-  .sidebar button{
-    width:100%;
-    padding:12px;
-    margin-bottom:12px;
-    border:none;
-    background:#1e293b;
-    color:white;
-    cursor:pointer;
-    border-radius:6px;
-    font-size:15px;
+  /* ✨ Hover */
+  .sidebar button:hover {
+    background: #334155;
   }
 
-  .sidebar button:hover{
-    background:#334155;
+  /* ✅ Active */
+  .sidebar button.active {
+    background: #6366f1;
+    font-weight: bold;
   }
 
-  /* CONTENT */
-  .content{
-    flex:1;
-    padding:40px;
+  /* 📋 TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
   }
 
-  /* PROFILE CARD */
-  .profile-card{
-    background:white;
-    border-radius:20px;
-    padding:35px;
-    display:flex;
-    gap:40px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+  th {
+    background: #1e293b;
+    color: white;
+    padding: 14px;
+    text-align: left;
   }
 
-  .left{
-    width:280px;
-    text-align:center;
-    border-right:1px solid #ddd;
-    padding-right:30px;
+  td {
+    padding: 14px;
+    border-bottom: 1px solid #e2e8f0;
   }
 
-  .profile-img{
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    object-fit:cover;
-    border:5px solid #6366f1;
+  /* 📦 CARD */
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
 
-  .left h2{
-    margin-top:20px;
-    font-size:32px;
+  /* 🚀 START BUTTON */
+  .start-btn {
+    margin-top: 15px;
+    padding: 12px 18px;
+    border: none;
+    background: #6366f1;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
   }
 
-  .role-badge{
-    margin-top:20px;
-    display:inline-block;
-    padding:10px 25px;
-    background:#e0e7ff;
-    color:#4338ca;
-    border-radius:30px;
-    font-weight:bold;
+  .start-btn:hover {
+    background: #4f46e5;
   }
+<<<<<<< HEAD
 
   .right{
     flex:1;
@@ -241,10 +316,10 @@ import { StartQuizComponent } from './start-quiz/start-quiz.component';
 })
 export class StudentDashboardComponent {
 
+=======
+  `]
+})
+export class StudentDashboardComponent {
+>>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
   section = 'profile';
-
-  ngOnInit() {
-    const studentData = localStorage.getItem('student');
-    console.log("🎯 Dashboard - Student data:", studentData);
-  }
 }

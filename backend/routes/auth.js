@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-// REGISTER - FIXED
+// REGISTER
 router.post('/register', async (req, res) => {
   try {
+
     const {
       username,
       enrollmentNumber,
@@ -18,19 +18,18 @@ router.post('/register', async (req, res) => {
       course,
       branch
     } = req.body;
+    const { username, password, role } = req.body;
 
-    console.log("📝 Registration data:", req.body);
-
-    // Check existing user
+    // check existing user
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hash password
+    // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Create user with correct field names
+    // ✅ ADD YOUR LINE HERE
     const user = new User({
       username,
       enrollmentNumber,
@@ -45,7 +44,7 @@ router.post('/register', async (req, res) => {
 
     await user.save();
 
-    console.log("✅ Saved user:", user);
+    console.log("SAVED USER:", user);
 
     // ✅ Send complete user data back
     res.status(201).json({
@@ -61,20 +60,18 @@ router.post('/register', async (req, res) => {
         username: user.username
       }
     });
+    res.status(201).json({ message: 'User registered successfully' });
 
   } catch (error) {
-    console.error("❌ Registration error:", error);
-    res.status(500).json({ message: 'Server error: ' + error.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-
-
-
-// LOGIN - FIXED
+// LOGIN
 router.post('/login', async (req, res) => {
   try {
-    console.log("🔐 Login request:", req.body);
+
+    console.log(req.body);
 
     const { username, password } = req.body;
 
@@ -88,13 +85,17 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    const jwt = require('jsonwebtoken');
+
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      process.env.JWT_SECRET || 'your_secret_key',
-      { expiresIn: '7d' }
+      {
+        userId: user._id,
+        role: user.role
+      },
+      'secretkey',
+      { expiresIn: '100d' }
     );
 
-    // ✅ Send complete user data (matching your component expectations)
     res.json({
       token,
       role: user.role,
@@ -110,79 +111,11 @@ router.post('/login', async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ Login error:", err);
     res.status(500).json({ message: err.message });
   }
 });
 
-// GET PROFILE
-router.get('/profile', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-      return res.status(401).json({ message: 'No token' });
-    }
-
-    const decoded = jwt.verify(
-     token,
-     process.env.JWT_SECRET || 'your_secret_key'
-    );
-    
-    const user = await User.findById(decoded.userId).select('-password');
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.json(user);
-
-  } catch (err) {
-
-    console.error("❌ Profile error:", err);
-
-    if (err.name === 'TokenExpiredError') {
-
-      return res.status(401).json({
-        message: 'Token expired. Please login again.'
-      });
-
-    }
-
-    res.status(401).json({
-      message: 'Invalid token'
-    });
-  }
-});
-
-
-// UPLOAD PHOTO
-router.put('/upload-photo/:id', async (req, res) => {
-
-  try {
-
-    const { photo } = req.body;
-
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      { photo },
-      { new: true }
-    );
-
-    res.json(updatedUser);
-
-  } catch (err) {
-
-    console.log(err);
-
-    res.status(500).json({
-      message: 'Error uploading photo'
-    });
-  }
-
-});
-
-// TEST DATA
+// TEST DATA (temporary)
 router.get('/quizzes', (req, res) => {
   res.json([
     {
