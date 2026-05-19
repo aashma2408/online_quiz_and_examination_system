@@ -287,7 +287,7 @@ import { HttpClient } from '@angular/common/http';
 
   `]
 })
-export class ProfileComponent implements OnInit {
+export class Profile implements OnInit {
 
   section: string = 'profile';
 

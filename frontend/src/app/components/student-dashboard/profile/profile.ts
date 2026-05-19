@@ -343,9 +343,9 @@ export class ProfileComponent implements OnInit {
 
         next: (res) => {
 
-          console.log(res);
+          console.log("PROFILE RESPONSE:", res);
 
-          this.student = res;
+          this.student = res.user || res.student || res;
 
           this.isLoading = false;
         },

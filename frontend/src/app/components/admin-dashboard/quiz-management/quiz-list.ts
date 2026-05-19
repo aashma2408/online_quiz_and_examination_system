@@ -283,7 +283,7 @@ button{
 `]
 })
 
-export class QuizListComponent implements OnInit {
+export class QuizList implements OnInit {
 
   quizzes: any[] = [];
   API = 'http://localhost:5000/api/quiz';

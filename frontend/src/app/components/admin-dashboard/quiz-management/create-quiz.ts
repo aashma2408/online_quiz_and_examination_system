@@ -117,7 +117,7 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class CreateQuizComponent {
+export class CreateQuiz {
 
   API = 'http://localhost:5000/api/quiz';
 

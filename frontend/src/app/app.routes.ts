@@ -5,6 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { StudentDashboardComponent } from './components/student-dashboard/student-dashboard.component';
 import { AttemptQuiz } from './components/student-dashboard/List of Quizzes/attemptQuiz';
+import { StudentQuizList } from './components/student-dashboard/List of Quizzes/list-Of-Quizzes';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
 
@@ -15,10 +16,11 @@ export const routes: Routes = [
   { path: 'admin', component: AdminDashboardComponent },
 
   { path: 'attempt-quiz/:id', component: AttemptQuiz },
+  { path: 'list-Of-Quizzes', component: StudentQuizList },
 
   {
     path: 'quiz/:id',
     loadComponent: () => import('./components/admin-dashboard/quiz-management/view-quiz')
-      .then(m => m.QuizViewComponent)
+      .then(m => m.QuizView)
   }
 ];

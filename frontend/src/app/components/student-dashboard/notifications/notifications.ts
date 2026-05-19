@@ -97,6 +97,6 @@ import { CommonModule } from '@angular/common';
 
   `]
 })
-export class NotificationsComponent {
+export class Notifications {
 
 }

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-student',
+  selector: 'app-student-management',
   standalone: true,
   imports: [CommonModule, FormsModule],
 
@@ -236,7 +236,7 @@ button:hover{
 }
   `]
 })
-export class StudentComponent implements OnInit {
+export class StudentManagement implements OnInit {
 
   students: any[] = [];
 

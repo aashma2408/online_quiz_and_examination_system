@@ -273,7 +273,7 @@ import { ChangeDetectorRef } from '@angular/core';
   `]
 })
 
-export class QuizViewComponent implements OnInit {
+export class QuizView implements OnInit {
 
   quiz: any = null;
 

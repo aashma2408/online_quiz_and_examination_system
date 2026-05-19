@@ -14,47 +14,46 @@ import { CommonModule } from '@angular/common';
   <header class="navbar">
     <h2 class="logo">QuizMaster</h2>
 
-    <nav>
+  <nav>
 
-  <!-- PRODUCTS -->
-  <div class="dropdown">
-    <a href="#">Products ▾</a>
-    <div class="dropdown-menu">
-      <a href="#">Quiz Builder</a>
-      <a href="#">Online Test</a>
-      <a href="#">Analytics</a>
+    <!-- PRODUCTS -->
+    <div class="dropdown">
+       <a href="#">Products ▾</a>
+       <div class="dropdown-menu">
+        <a href="#">Quiz Builder</a>
+        <a href="#">Online Test</a>
+        <a href="#">Analytics</a>
+      </div>
     </div>
-  </div>
 
-  <!-- TEMPLATES -->
-  <div class="dropdown">
-    <a href="#">Templates ▾</a>
-    <div class="dropdown-menu">
-      <a href="#">Data Science</a>
-      <a href="#">Programming</a>
-      <a href="#">Placement</a>
+    <!-- TEMPLATES -->
+    <div class="dropdown">
+      <a href="#">Templates ▾</a>
+     <div class="dropdown-menu">
+        <a href="#">Data Science</a>
+        <a href="#">Programming</a>
+        <a href="#">Technical Subjects</a>
+      
+      </div>
     </div>
-  </div>
 
-  <!-- SOLUTIONS -->
-  <div class="dropdown">
-    <a href="#">Solutions ▾</a>
-    <div class="dropdown-menu">
-      <a href="#">For Students</a>
-      <a href="#">For Teachers</a>
-      <a href="#">For Companies</a>
+    <!-- SOLUTIONS -->
+    <div class="dropdown">
+      <a href="#">Solutions ▾</a>
+      <div class="dropdown-menu">
+         <a href="#">For Students</a>
+        <a href="#">For Teachers</a>
+      </div>
     </div>
-  </div>
 
-  <!-- RESOURCES -->
-  <div class="dropdown">
-    <a href="#">Resources ▾</a>
-    <div class="dropdown-menu">
-      <a href="#">Blog</a>
-      <a href="#">Help Center</a>
-      <a href="#">API Docs</a>
-    </div>
-  </div>
+    <!-- RESOURCES -->
+    <div class="dropdown">
+      <a href="#">Resources ▾</a>
+      <div class="dropdown-menu">
+        <a href="#">Help Center</a>
+        <a href="#">API Docs</a>
+      </div>
+   </div>
 
 </nav>
 
@@ -66,10 +65,9 @@ import { CommonModule } from '@angular/common';
       </ng-container>
 
       <ng-container *ngIf="isLoggedIn">
-        <!-- as an admin login -->
         <button *ngIf="role === 'admin'" routerLink="/admin">Admin Dashboard</button>
-        <!-- as a student login -->
-        <button *ngIf="role === 'student'" routerLink="/student">Student Dashboard</button> 
+
+        <button *ngIf="role === 'student'" routerLink="/student">Student Dashboard</button>
        
         <button (click)="logout()" class="logout-btn">Logout</button>
       </ng-container>
@@ -105,7 +103,7 @@ import { CommonModule } from '@angular/common';
         </div>
 
         <div class="hero-feature">
-          🔒 Secure Exams
+          🔒 Secure Quiz
         </div>
 
         <div class="hero-feature">
@@ -114,6 +112,10 @@ import { CommonModule } from '@angular/common';
 
         <div class="hero-feature">
           👨‍🎓 Student Dashboard
+        </div>
+
+        <div class="hero-feature">
+          👨‍🎓 Admin Dashboard
         </div>
       </div>
 
@@ -260,10 +262,7 @@ import { CommonModule } from '@angular/common';
       <p>Teams</p>
     </div>
 
-    <div class="tool">
-      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png">
-      <p>Zoom</p>
-    </div>
+    
 
     <div class="tool">
   <img src="https://cdn-icons-png.flaticon.com/512/5968/5968528.png">
@@ -363,6 +362,15 @@ import { CommonModule } from '@angular/common';
   --card-bg:#ffffff;
 
   --text:#475569;
+
+  --hero-bg:
+   radial-gradient(circle at top left,
+   rgba(255,255,255,0.10), transparent 25%),
+
+   radial-gradient(circle at bottom right,
+  rgba(255,255,255,0.08), transparent 25%),
+
+linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
 }
 
 
@@ -381,6 +389,8 @@ import { CommonModule } from '@angular/common';
   color: white;
   position: sticky;
   top: 0;
+
+  z-index: 9999;
 }
 
 /* DROPDOWN COMMON */
@@ -399,7 +409,7 @@ import { CommonModule } from '@angular/common';
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   display: none;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 99999;
 }
 
 .dropdown-menu a {
@@ -485,7 +495,7 @@ nav a:hover {
 
      linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
   position:relative;
-  overflow:hidden;
+  overflow:visible;
   color:white;
   gap:50px;
 }
@@ -608,7 +618,14 @@ nav a:hover {
 .integrations{
   padding:90px 20px;
   text-align:center;
-  background:var(--section-bg);
+  background:
+    radial-gradient(circle at top left,
+    rgba(255,255,255,0.10), transparent 25%),
+
+    radial-gradient(circle at bottom right,
+    rgba(255,255,255,0.08), transparent 25%),
+
+    linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
 }
 
 /* tools container */
@@ -626,7 +643,12 @@ nav a:hover {
   text-align: center;
   padding: 15px;
   border-radius: 12px;
-  background: white;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   transition: 0.3s;
 }
@@ -645,7 +667,13 @@ nav a:hover {
 }
 
 /* text */
+
+.integrations h2{
+  color:white;
+}
+
 .tool p {
+  color:white;
   margin-top: 10px;
   font-size: 14px;
   font-weight: 500;
@@ -745,18 +773,28 @@ nav a:hover {
 /* FEATURES */
 .features-section {
   padding: 80px 50px;
-  background:var(--section-bg);
+  background:
+    radial-gradient(circle at top left,
+    rgba(255,255,255,0.10), transparent 25%),
+
+    radial-gradient(circle at bottom right,
+    rgba(255,255,255,0.08), transparent 25%),
+
+    linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .section-heading {
+  color:white;
   font-size: 40px;
   font-weight: 700;
   margin-bottom: 50px;
 }
 
 .section-heading span{
-  background:linear-gradient(90deg,#2563eb,#7c3aed);
+   background:linear-gradient(90deg,#ff6b6b,#f59e0b);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -784,11 +822,11 @@ nav a:hover {
 .feature-box h3{
   font-size:22px;
   margin-bottom:15px;
-  color:#0f172a;
+  color:white;
 }
 
 .feature-box p{
-  color:#64748b;
+  color:white;
   line-height:1.7;
   font-size:15px;
 }
@@ -831,7 +869,29 @@ nav a:hover {
 /* FAQ */
 .faq-section {
   padding:90px 50px;
-  background:var(--section-bg);
+  background:
+    radial-gradient(circle at top left,
+    rgba(255,255,255,0.10), transparent 25%),
+
+    radial-gradient(circle at bottom right,
+    rgba(255,255,255,0.08), transparent 25%),
+
+    linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
+}
+
+/* QUESTION HEADING */
+.faq-section .section-heading{
+  text-align:center;
+  color:white;
+  margin-bottom:50px;
+}
+
+/* "questions" WORD COLOR */
+.faq-section .section-heading span{
+  color:#ffd84d;
+
+  background:none;
+  -webkit-text-fill-color:#ffd84d;
 }
 
 .faq-grid {
@@ -841,7 +901,7 @@ nav a:hover {
 }
 
 .faq-card{
-  background:var(--card-bg);
+  background: rgba(255,255,255,0.12);
   padding:30px;
   border-radius:20px;
   border:1px solid #dbeafe;
@@ -851,16 +911,16 @@ nav a:hover {
 
 .faq-card:hover{
   transform:translateY(-5px);
-  box-shadow:0 15px 30px rgba(37,99,235,0.12);
+  box-shadow:0 15px 30px rgba(37,99,235,0.25);
 }
 
 .faq-card h3 {
   margin-bottom: 15px;
-  color: #0f172a;
+  color: white;
 }
 
 .faq-card p {
-  color: #475569;
+   color: #e2e8f0;
 }
 
 
@@ -892,9 +952,3 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
-
-
-
-
-
-

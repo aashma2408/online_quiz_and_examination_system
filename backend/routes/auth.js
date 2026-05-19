@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // REGISTER
 router.post('/register', async (req, res) => {
@@ -18,25 +19,27 @@ router.post('/register', async (req, res) => {
       course,
       branch
     } = req.body;
-    const { username, password, role } = req.body;
 
-    // check existing user
+    // Check existing user
     const existingUser = await User.findOne({ username });
+
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({
+        message: 'User already exists'
+      });
     }
 
-    // hash password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ ADD YOUR LINE HERE
+    // Create user
     const user = new User({
       username,
       enrollmentNumber,
       password: hashedPassword,
       role: role || 'student',
       fullName,
-      email,      
+      email,
       phone,
       course,
       branch
@@ -46,7 +49,7 @@ router.post('/register', async (req, res) => {
 
     console.log("SAVED USER:", user);
 
-    // ✅ Send complete user data back
+    // Send response
     res.status(201).json({
       message: 'User registered successfully',
       user: {
@@ -60,42 +63,58 @@ router.post('/register', async (req, res) => {
         username: user.username
       }
     });
-    res.status(201).json({ message: 'User registered successfully' });
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+
+    console.log(error);
+
+    res.status(500).json({
+      message: 'Server error'
+    });
+
   }
 });
 
 // LOGIN
 router.post('/login', async (req, res) => {
+
   try {
 
     console.log(req.body);
 
     const { username, password } = req.body;
 
+    // Find user
     const user = await User.findOne({ username });
+
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({
+        message: 'Invalid credentials'
+      });
     }
 
+    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({
+        message: 'Invalid credentials'
+      });
     }
 
-    const jwt = require('jsonwebtoken');
-
+    // Generate token
     const token = jwt.sign(
       {
         userId: user._id,
         role: user.role
       },
       'secretkey',
-      { expiresIn: '100d' }
+      {
+        expiresIn: '100d'
+      }
     );
 
+    // Send response
     res.json({
       token,
       role: user.role,
@@ -106,17 +125,25 @@ router.post('/login', async (req, res) => {
         course: user.course,
         branch: user.branch,
         role: user.role,
-        username: user.username,
+        username: user.username
       }
     });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+
+    console.log(err);
+
+    res.status(500).json({
+      message: err.message
+    });
+
   }
+
 });
 
-// TEST DATA (temporary)
+// TEST DATA
 router.get('/quizzes', (req, res) => {
+
   res.json([
     {
       _id: "123",
@@ -126,6 +153,7 @@ router.get('/quizzes', (req, res) => {
       questions: []
     }
   ]);
+
 });
 
 // GET ALL REGISTERED STUDENTS
@@ -135,9 +163,7 @@ router.get('/students', async (req, res) => {
 
     const students = await User.find(
       { role: 'student' },
-      {
-        password: 0
-      }
+      { password: 0 }
     );
 
     res.json(students);
@@ -152,6 +178,71 @@ router.get('/students', async (req, res) => {
 
   }
 
+});
+
+
+// PROFILE ROUTE
+router.get('/profile', async (req, res) => {
+
+  try {
+
+    const authHeader = req.header('Authorization');
+
+    if (!authHeader) {
+      return res.status(401).json({
+        message: 'No token'
+      });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+
+    const decoded = jwt.verify(token, 'secretkey');
+
+    const user = await User.findById(decoded.userId)
+      .select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found'
+      });
+    }
+
+    res.json(user);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: 'Server Error'
+    });
+  }
+});
+
+
+// UPLOAD PROFILE PHOTO
+router.put('/upload-photo/:id', async (req, res) => {
+
+  try {
+
+    const { photo } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { photo },
+      { new: true }
+    );
+
+    res.json(updatedUser);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: 'Server Error'
+    });
+  }
 });
 
 module.exports = router;

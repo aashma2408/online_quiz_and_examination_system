@@ -1,20 +1,27 @@
-<<<<<<< HEAD
-import { Component, OnInit } from '@angular/core';
-=======
 import { Component } from '@angular/core';
->>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
 import { CommonModule } from '@angular/common';
+
+import { ProfileComponent } from './profile/profile';
 import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
+import { Notifications } from './notifications/notifications';
+import { PreviousAttempts } from './previous-attempts/previous-attempts';
+
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule, StudentQuizList],
+  imports: [CommonModule,
+    ProfileComponent,
+    StudentQuizList,
+    Notifications,
+    PreviousAttempts
+  ],
 
   template: `
   <div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
+
       <h2>Student Dashboard 🎓</h2>
 
       <button
@@ -40,6 +47,7 @@ import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
         (click)="section='quiz'">
         📋 List of Quizzes
       </button>
+
     </aside>
 
     <!-- CONTENT -->
@@ -47,44 +55,17 @@ import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
 
       <!-- PROFILE -->
       <div *ngIf="section==='profile'">
-        <h2>👤 Profile</h2>
-        <p><b>Name:</b> Student</p>
-        <p><b>Email:</b> student@email.com</p>
+        <app-profile></app-profile>
       </div>
-
-      <!-- RESULTS -->
+  
+      <!-- ATTEMPTS -->
       <div *ngIf="section==='results'">
-        <h2>📊 Previous Results</h2>
-
-        <table>
-          <tr>
-            <th>Subject</th>
-            <th>Score</th>
-          </tr>
-
-          <tr>
-            <td>DBMS</td>
-            <td>80%</td>
-          </tr>
-
-          <tr>
-            <td>OS</td>
-            <td>70%</td>
-          </tr>
-        </table>
+        <app-previous-attempts></app-previous-attempts>
       </div>
 
       <!-- NOTIFICATIONS -->
       <div *ngIf="section==='notifications'">
-        <h2>🔔 Notifications</h2>
-
-        <div class="card">
-          <p>✅ New Quiz Available</p>
-        </div>
-
-        <div class="card">
-          <p>📢 Result Published</p>
-        </div>
+        <app-notifications></app-notifications>
       </div>
 
       <!-- QUIZ -->
@@ -93,6 +74,7 @@ import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
       </div>
 
     </main>
+
   </div>
   `,
 
@@ -100,16 +82,10 @@ import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
   /* 🔥 MAIN LAYOUT */
   .layout {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    background: #f1f5f9;
   }
 
-<<<<<<< HEAD
-  .layout{
-    display:flex;
-    min-height:100vh;
-    background:#f1f5f9;
-=======
   /* ✅ SIDEBAR */
   .sidebar {
     width: 250px;
@@ -119,7 +95,6 @@ import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
->>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
   }
 
   /* ✅ CONTENT */
@@ -205,121 +180,115 @@ import { StudentQuizList } from './List of Quizzes/list-Of-Quizzes';
   .start-btn:hover {
     background: #4f46e5;
   }
-<<<<<<< HEAD
 
-  .right{
-    flex:1;
+  /* RIGHT SECTION */
+  .right {
+    flex: 1;
   }
 
-  .title{
-    margin-bottom:30px;
-    color:#1e293b;
+  .title {
+    margin-bottom: 30px;
+    color: #1e293b;
   }
 
-  .info-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:20px;
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 20px;
   }
 
-  .info-box{
-    background:#f3f4f6;
-    padding:25px;
-    border-radius:15px;
+  .info-box {
+    background: #f3f4f6;
+    padding: 25px;
+    border-radius: 15px;
   }
 
-  .info-box span{
-    color:#6b7280;
-    font-size:14px;
+  .info-box span {
+    color: #6b7280;
+    font-size: 14px;
   }
 
-  .info-box h3{
-    margin-top:10px;
-    font-size:28px;
-    color:#111827;
+  .info-box h3 {
+    margin-top: 10px;
+    font-size: 28px;
+    color: #111827;
   }
 
   /* RESULTS */
-  .result-box{
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    margin-top:15px;
-    display:flex;
-    justify-content:space-between;
+  .result-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
   }
 
   /* NOTIFICATIONS */
-  .notify{
-    background:white;
-    padding:15px;
-    margin-top:15px;
-    border-left:5px solid #6366f1;
-    border-radius:5px;
+  .notify {
+    background: white;
+    padding: 15px;
+    margin-top: 15px;
+    border-left: 5px solid #6366f1;
+    border-radius: 5px;
   }
 
   /* QUIZ */
-  .quiz-btn{
-    margin-top:20px;
-    padding:14px 30px;
-    border:none;
-    background:#6366f1;
-    color:white;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
+  .quiz-btn {
+    margin-top: 20px;
+    padding: 14px 30px;
+    border: none;
+    background: #6366f1;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
   }
 
+  /* =========================
+     RESPONSIVE DESIGN
+  ========================= */
 
- /* =========================
-   RESPONSIVE DESIGN
-========================= */
+  @media(max-width:768px){
 
-@media(max-width:768px){
+    .layout{
+      flex-direction: column;
+      min-height: auto;
+    }
 
-  .layout{
-    flex-direction:column;
-    min-height:auto;
+    .sidebar{
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px;
+    }
+
+    .sidebar h2{
+      width: 100%;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    .sidebar button{
+      width: auto;
+      min-width: 140px;
+      margin-bottom: 0;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .content{
+      padding: 15px;
+    }
   }
-
-  .sidebar{
-    width:100%;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:10px;
-    padding:15px;
-  }
-
-  .sidebar h2{
-    width:100%;
-    text-align:center;
-    margin-bottom:15px;
-    font-size:22px;
-  }
-
-  .sidebar button{
-    width:auto;
-    min-width:140px;
-    margin-bottom:0;
-    padding:10px;
-    font-size:14px;
-  }
-
-  .content{
-    padding:15px;
-  }
-
-}
-
   `]
 })
+
 export class StudentDashboardComponent {
 
-=======
-  `]
-})
-export class StudentDashboardComponent {
->>>>>>> 1dbbcb7a5d70d11a78e60eabe722f561d24400e3
   section = 'profile';
+
 }
