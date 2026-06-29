@@ -15,7 +15,7 @@ const reportRoutes = require('./routes/report');
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:4200',
+    origin:  process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
@@ -27,16 +27,12 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api', reportRoutes);
 
-mongoose.connect(
-    'mongodb://aashma_gaykwad:aashma24@ac-jys7sib-shard-00-00.axg99rx.mongodb.net:27017,ac-jys7sib-shard-00-01.axg99rx.mongodb.net:27017,ac-jys7sib-shard-00-02.axg99rx.mongodb.net:27017/quizDB?ssl=true&replicaSet=atlas-gx9hg9-shard-0&authSource=admin&appName=Cluster0',
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
-)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log(err));
-
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.log(err));
 
 // ================= QUIZ MODEL =================
 
@@ -90,7 +86,7 @@ const authenticateToken = (req, res, next) => {
 
     try {
 
-        const decoded = jwt.verify(token, 'secretkey');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         req.user = decoded;
 
@@ -376,7 +372,7 @@ app.get(
                     fullName:
                         r.user?.fullName ||
                         r.user?.fullname ||
-                        r.user?.username ||
+                        r.user?.username ||+
                         'Unknown',
 
                     quizTitle:
@@ -413,10 +409,8 @@ app.get(
 
 
 // ================= START SERVER =================
-
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-
     console.log(`Server running on port ${PORT}`);
 });
